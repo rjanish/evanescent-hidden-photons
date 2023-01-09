@@ -1,5 +1,32 @@
+
+# ignore all files without extension:
+  # Ignore all
+  # Unignore all with extensions
+  # Unignore all dirs
+*
+!*.*
+!*/
+
+# latex
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*Notes.bib
+
+# mathematica
+*.nb
+*.m
+
+# python
+*.pyc
+.ipynb_checkpoints/
+
+# general
 *.pdf
 *.png
 *.dat
-*.pyc
-*.nb
+
+# locals
+old_code/
