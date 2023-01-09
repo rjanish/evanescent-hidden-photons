@@ -1,0 +1,50 @@
+
+%fonts 
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{relsize}
+\usepackage{soul}
+\usepackage{calligra}
+\usepackage{verbatim}
+
+%structure 
+\usepackage{adjustbox}
+\usepackage[titles]{tocloft} % table of contents style
+\cftsetindents{section}{0em}{2.5em}
+\cftsetindents{subsection}{2.5em}{2.5em}
+\renewcommand{\cftsecfont}{\hypersetup{linkcolor=Blue}}
+\renewcommand{\cftsubsecfont}{\hypersetup{linkcolor=Periwinkle}}
+\renewcommand{\cftsubsubsecfont}{\hypersetup{linkcolor=Periwinkle}}
+\usepackage{appendix}
+
+%figures 
+\usepackage{graphicx,epsfig}
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{placeins}
+
+%tables 
+\usepackage{tabularx}
+\usepackage{makecell,multirow}
+\usepackage{dcolumn}
+
+%math
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{slashed}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{leftidx}
+\usepackage{commath}
+
+
+%links
+\usepackage{url}
+\definecolor{red}{rgb}{0.9, 0,0}
+\definecolor{navy}{rgb}{0.05, 0.05,0.8}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     citecolor    = red,
+     linkcolor = navy
+}

@@ -1,0 +1,101 @@
+
+%shorthands
+\newcommand{\tx}[1]{\ensuremath{\textnormal{#1}}}
+\newcommand{\eqa}[1]{\begin{align}#1\end{align}}
+\newcommand{\no}{\nonumber}
+\newcommand{\rp}{\right)}
+\newcommand{\lp}{\left(}
+\newcommand{\rb}{\right]}
+\newcommand{\lb}{\left[}
+\def\bit{\begin{itemize}}
+\def\eit{\end{itemize}}
+\def\ben{\begin{enumerate}}
+\def\een{\end{enumerate}}
+\newcommand{\la}[1]{\label{#1}}
+\newcommand{\Eq}[1]{Eq.~\eqref{#1}} 
+\newcommand{\Eqs}[2]{Eqs.~\eqref{#1} and \eqref{#2}} 
+\newcommand{\Sec}[1]{Sec.~\ref{#1}} 
+\newcommand{\Secs}[2]{Secs.~\ref{#1} and \ref{#2}} 
+\newcommand{\Ap}[1]{Ap.~\ref{#1}} 
+\newcommand{\Fig}[1]{Fig.~\ref{#1}} 
+\newcommand{\Figs}[2]{Figs.~\ref{#1} and \ref{#2}}
+\newcommand{\Tab}[1]{Table~\ref{#1}} 
+\newcommand{\Msun}{M_\odot}
+\newcommand{\Mpl}{M_\tx{Pl}}
+\newcommand{\GN}{G_\tx{N}}
+\newcommand{\Lqcd}{\Lambda_\tx{qcd}}
+\newcommand{\mn}{\tx{min}}
+\newcommand{\mx}{\tx{max}}
+\newcommand{\qq}{\;\;\;\;}
+\newcommand{\pfrac}[2]{\lp\frac{#1}{#2}\rp}
+\newcommand{\Lag}{\mathcal{L}}
+\newcommand{\tld}[1]{\tilde{#1}}
+
+%units
+\newcommand{\units}[1]{\;\tx{#1}}
+\newcommand{\eV}{\units{eV}}
+\newcommand{\kev}{\units{kev}}
+\newcommand{\MeV}{\units{MeV}}
+\newcommand{\GeV}{\units{GeV}}
+\newcommand{\TeV}{\units{TeV}}
+\newcommand{\Watt}{\units{W}}
+\newcommand{\gram}{\units{g}}
+\newcommand{\Kelvin}{\units{K}}
+\newcommand{\cm}{\units{cm}}
+\newcommand{\meter}{\units{m}}
+\newcommand{\km}{\units{km}}
+\newcommand{\Ang}{\mathop{\tx{\r{A}}}}
+\newcommand{\AU}{\units{AU}}
+\newcommand{\pc}{\units{pc}}
+\newcommand{\kpc}{\units{kpc}}
+\newcommand{\Mpc}{\units{Mpc}}
+\newcommand{\seconds}{\units{sec}}
+\newcommand{\yr}{\units{year}}
+\newcommand{\MHz}{\units{MHz}}
+\newcommand{\kHz}{\units{kHz}}
+\newcommand{\Hz}{\units{Hz}}
+\newcommand{\Gauss}{\units{G}}
+\newcommand{\Tesla}{\units{T}}
+\newcommand{\Ohm}{\Omega}
+\newcommand{\Volt}{\units{V}}
+
+
+%operators
+% \DeclareMathOperator{\tr}{Tr}
+\DeclareMathOperator{\sgn}{Sgn}
+\DeclareMathOperator{\arcsinh}{Arcsinh}
+\DeclareMathOperator{\arctinh}{Arctanh}
+\DeclareMathOperator{\Min}{Min}
+\DeclareMathOperator{\Max}{Max}
+\DeclareMathOperator{\Arg}{Arg}
+\DeclareMathOperator{\ReP}{Re}
+\DeclareMathOperator{\ImP}{Im}
+\DeclareMathOperator{\Ln}{ln}
+\newcommand{\Order}{\mathcal{O}}
+\newcommand{\diff}[1]{\mathop{}\!\mathrm{d}{#1}\mathop{}\!}
+\newcommand{\diffp}[2]{\mathop{}\!\mathrm{d^{#1}}{#2}\mathop{}\!}
+\newcommand{\dd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\ddO}[1]{\frac{\partial}{\partial #1}}
+\newcommand{\grad}{\vec{\nabla}}
+\newcommand{\lvl}{\left|}
+\newcommand{\rvl}{\right|}
+\newcommand{\vev}[1]{\langle #1 \rangle}
+\newcommand{\bra}[1]{\langle #1 | }
+\newcommand{\ket}[1]{| #1 \rangle}
+\newcommand{\ip}[2]{\langle #1 | #2 \rangle}
+\newcommand{\ml}[3]{\langle #1 \left| #2 \right| #3 \rangle}
+
+%formatting
+\newcommand{\aside}[1]{{\color{gray} [Aside:~\emph{#1}]}}
+% questions
+\newcounter{questioncount}[section]
+\newcommand{\question}[1]{\refstepcounter{questioncount}{\color{Maroon} [Question (\thesection.\thequestioncount): #1]}}
+
+
+
+
+
+
+
+
+

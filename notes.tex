@@ -1,0 +1,1283 @@
+
+\documentclass[prd,longbibliography,nofootinbib]{revtex4-2}
+% \documentclass{article}
+% \usepackage[margin=1.5in]{geometry}
+
+% \usepackage[square,numbers]{natbib}
+% \bibliographystyle{plainnat}
+
+\input{packages}
+\graphicspath{{./figures/}}
+\input{macros}
+
+% annotations 
+\newcounter{notecountRJ}[section]
+\newcommand{\RJ}[1]{\refstepcounter{notecountRJ} {\bf \textcolor{Violet}{[RJ \thesection.\thenotecountRJ: #1]}}}
+
+% shortands 
+\newcommand{\mA}{m_{A'}}
+\newcommand{\vE}{\vec{E}}
+\newcommand{\vB}{\vec{B}}
+\newcommand{\vA}{\vec{A}}
+\newcommand{\e}{\epsilon}
+\newcommand{\vtE}{\tld{\vec{E}}}
+\newcommand{\vtB}{\tld{\vec{B}}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\title{Notes on the Effervescent Mixing of Hidden Photons}
+\author{Ryan Janish}
+\date{\today}
+
+\begin{abstract}
+Notes for light-shining-though-walls experiments using effervescent waves with thin (super)conducing barriers and/or nested cavities. 
+\end{abstract}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Photons and Hidden Photons}
+
+\subsection{Kinetic Mixing}
+
+Define the kinetic mixing $\e$ between the massless, Maxwell photon and a massive hidden photon as 
+\eqa{
+\la{eq:interaction-L}
+    \Lag = - \frac{1}{4} F_{\mu\nu} F^{\mu\nu} 
+     +  \frac{\e}{2}  F_{\mu\nu} F'^{\mu\nu}
+     - \frac{1}{4}  F'_{\mu\nu} F'^{\mu\nu}
+     + \frac{1}{2} \mA^2 A'_\mu A'^\mu 
+     -  A_\mu J_\tx{EM}^\mu. 
+} 
+Here $J_\tx{EM}$ is the electromagnetic current, e.g.~$J_\tx{EM}^\mu = e \bar{\psi} \gamma^\mu \psi$ for a fermion $\psi$ of unit charge. 
+As written in \Eq{eq:interaction-L}, $A$ is the active photon and $A'$ is sterile, while neither are propagation eigenstates. 
+This is the interaction basis.
+We can diagonalize the kinetic term with the transformation 
+\eqa{
+    A &= \tld{A} + \e A' .
+}
+This implies $ F = \tld{F} + \e F' $ and the kinetic + mixing term becomes  
+\eqa{
+    F^2 - 2 \e F F' + F'^2 &= 
+    \lp  \tld{F}  + \e F' \rp^2 
+    - 2 \e F' \lp \tld{F}  + \e F'\rp + F'^2 \\
+    &= \tld{F} ^2 + 2 \e F' \tld{F}  + \e^2 F'^2
+    - 2 \e F' \tld{F}  - 2 \e^2  F'^2 + F'^2 \\
+    &= \tld{F} ^2 + \lp 1 -  \e^2 \rp F'^2 .
+}
+A direct coupling between $A'$ and the SM current appears
+\eqa{
+    A_\mu J_\tx{EM}^\mu = 
+     \tld{A}_\mu J_\tx{EM}^\mu +  \e A'_\mu J_\tx{EM}^\mu .
+}
+Then, 
+\eqa{
+    \Lag = 
+     - \frac{1}{4} \tld{F} ^2 
+     - \frac{1}{4} \lp 1 -  \e^2 \rp F'^2 
+     + \frac{1}{2} \mA^2 A'_\mu A'^\mu 
+     -  \tld{A}_\mu J_\tx{EM}^\mu 
+     -\e A'_\mu J_\tx{EM}^\mu. 
+} 
+Rescaling the $A'$ fields by $\sqrt{1 + \e^2}$ yields
+\eqa{
+\la{eq:kinetic-L}
+    \Lag &= - \frac{1}{4} \tld{F}_{\mu\nu} \tld{F}^{\mu\nu}  
+    -  \tld{A}_\mu J_\tx{EM}^\mu 
+     - \frac{1}{4}  \tld{F}'_{\mu\nu} \tld{F}'^{\mu\nu}
+     + \frac{1}{2} \frac{\mA^2}{1 - \e^2} \tld{A}'_\mu \tld{A}'^\mu 
+     -  \frac{\e}{\sqrt{1 - \e^2}} \tld{A}'_\mu J_\tx{EM}^\mu. 
+} 
+These are the kinetic eigenstates (with tildes), related to the interacting and sterile fields (no tildes) by 
+\eqa{
+\la{eq:A}
+   A &= \tld{A} + \frac{\e}{\sqrt{1 - \e^2}} \tld{A}' \\
+\la{eq:A'}
+   A' &= \frac{1}{\sqrt{1 - \e^2}} \tld{A}'
+}
+and
+\eqa{
+\la{eq:tildeA}
+   \tld{A} &= A - \e A' \\
+\la{eq:tildeA'}
+   \tld{A}' &= \sqrt{1 - \e^2} A'
+}
+Note that these are not unitary transformations, so the two kinetic states $\tld{A}$ and $\tld{A}'$ are not orthogonal to each other.
+That seems unusual, but I don't think it is a problem. 
+$\tld{A}$ and $\tld{A}'$ are still a basis for the same field space spanned by $A$ and $A'$. 
+There are of course unitary transformations that would eliminate the kinetic mixing term, such as 
+\eqa{
+    B &= \frac{1}{\sqrt{2}} \lp  A + A' \rp \\
+    B' &= \frac{1}{\sqrt{2}} \lp  A - A' \rp
+}  
+however this will have a mass mixing between $B$ and $B'$ after transforming the mass term $\mA A'^2$. 
+I wonder if \Eqs{eq:tildeA}{eq:tildeA'} is the unique transformation that diagonalizes both the kinetic and the mass terms, and has canonically normalized kinetic terms? 
+
+\subsection{Field Equations}
+
+We can infer the field equations for the active/sterile fields $\lp  E, B, E', B'\rp$ from \Eq{eq:interaction-L}.  
+First replace the $F$ in the mixing term with $A$:
+\eqa{
+    F_{\mu\nu} F'^{\mu\nu} &= 
+    \lp  \partial_\mu A_\nu - \partial_\nu A_\mu \rp F'^{\mu\nu} \\
+    &= 2 \lp \partial_\mu A_\nu \rp F'^{\mu\nu} \\
+    &= -2  A_\nu \lp  \partial_\mu F'^{\mu\nu} \rp 
+    + \lp \tx{boundary term}\rp
+\la{eq:F-to-A}
+}
+Thus \Eq{eq:interaction-L} can be re-written as
+\eqa{
+\la{eq:L-with_jeff}
+    \Lag &= - \frac{1}{4} F_{\mu\nu} F^{\mu\nu} 
+ - A_\nu \lp  \e \partial_\mu F'^{\mu\nu} + J_\tx{EM}^\mu \rp
+     - \frac{1}{4}  F'_{\mu\nu} F'^{\mu\nu}
+     + \frac{1}{2} \mA^2 A'_\mu A'^\mu 
+}
+and we see $F$ is sourced by the effective current $\e \partial_\mu F'^{\mu\nu} + J_\tx{EM}^\mu$. 
+It thus obeys Maxwell's equations with that current, 
+\eqa{
+\la{eq:field-eq-F}
+\partial_\mu F^{\mu\nu} =  
+     \e \partial_\mu F'^{\mu\nu} + J_\tx{EM}^\nu.
+}
+We now make the same argument for the primed fields, replacing $F'$ with $A'$. 
+By symmetry \Eq{eq:F-to-A} also yields 
+\eqa{
+    F_{\mu\nu} F'^{\mu\nu} 
+    &= -2  A'_\nu \lp  \partial_\mu F^{\mu\nu} \rp 
+    + \lp \tx{boundary term}\rp
+}
+and we can write \Eq{eq:interaction-L} in yet another way as
+\eqa{
+\la{eq:L-jeff-F'}
+    \Lag &= - \frac{1}{4} F_{\mu\nu} F^{\mu\nu} 
+     - A_\nu  J_\tx{EM}^\mu 
+     - \frac{1}{4}  F'_{\mu\nu} F'^{\mu\nu}
+     - A'_\nu \lp  - \frac{1}{2} \mA^2  A'^\nu +
+     \e \partial_\mu F^{\mu\nu} \rp.
+} 
+So $F'$ is soured by the effective current $- \mA^2  A'^\nu + \e \partial_\mu F^{\mu\nu}$. 
+Note there is an extra factor of $2$ on the $\mA$ term in the effective current compared to the Lagrangian in \Eq{eq:L-jeff-F'}. 
+This is because upon varying \Eq{eq:L-jeff-F'} there is a contribution from both factors of $A'$ in the mass term. 
+Thus
+\eqa{
+\la{eq:field-eq-F'}
+    \partial_\mu F'^{\mu\nu} =
+     \e \partial_\mu F^{\mu\nu} 
+     - \mA^2 A'^\nu.
+}
+
+These equations describe the generation of $F$ and $F'$ fields by charges. 
+To describe the response of charges to the fields, we need the Lorentz force law.
+This is derived from \Eq{eq:interaction-L} by varying the term $A_\mu J_\tx{EM}^\mu$, and since that term appears here identically to that of the pure Maxwell theory, the Lorentz force here will have it usual form and involve only $F$.   
+For a unit point charge with 4-velocity $U^\nu$, this is:
+\eqa{
+\la{eq:lorentz-force-F}
+    \dd{P_\mu}{\tau} = e F^{\mu\nu} U_\nu. 
+}
+
+The field equations are coupled in $F$ and $F'$ because these field are not kinetic eigenstates. 
+We can uncouple them to recover the kinetic basis, writing field equations in $\tld{F}$ and $\tld{F}'$. 
+\Eq{eq:field-eq-F-vary} immediate leads us to recognize the linear combination $\tld{A} = A - \e A'$ as coupling to EM currents. 
+This is the same combination identified in \Eq{eq:tildeA}. 
+Applying this to \Eqs{eq:field-eq-F-vary}{eq:lorentz-force-F} yields
+\eqa{
+\la{eq:field-eq-tildeF}
+\partial_\mu \tld{F}^{\mu\nu} &= J_\tx{EM}^\nu \\
+\la{eq:lorentz-force-mixed}
+    \dd{P_\mu}{\tau} &= e \tld{F}^{\mu\nu} U_\nu
+     + \e e F'^{\mu\nu} U_\nu. 
+}
+Then combine \Eqs{eq:field-eq-F-vary}{eq:field-eq-F'-vary} to eliminate $F$, 
+\eqa{
+\la{eq:unscaled}
+  \lp  1 - \e^2 \rp  \partial_\mu F'^{\mu\nu} 
+         +  \mA^2 A'^\nu &= \e J_\tx{EM}^\nu \\
+ \partial_\mu F'^{\mu\nu} 
+         +  \frac{\mA^2}{1 - \e^2} A'^\nu &= 
+         \frac{\e}{1 - \e^2} J_\tx{EM}^\nu.
+}
+Now EM currents source both $\tld{F}$ and $F'$, and they feel a force from both, and $\tld{F}$ and $F'$ do not mix. 
+This is the kinetic basis. 
+Note that the normalization of charge $F'$ in \Eqs{eq:unscaled}{eq:lorentz-force-mixed} is not the same as for $F$ in \Eqs{eq:field-eq-tildeF}{eq:lorentz-force-mixed}. 
+$F$ couples to $J$ and to $e U$, while $F'$ couples to $\e J /(1-\e^2)$ and to $\e e U$.  
+To make these have the same ratio, rescale $F'$ to be $F' = \tld{F}/\sqrt{1-\e^2}$.
+This is equivalent to fixing a canonically normalized kinetic term for $\tld{F}'$. 
+Then we get the equations 
+\eqa{
+\la{eq:field-eq-tildeF-repeate}
+\partial_\mu \tld{F}^{\mu\nu} &= J_\tx{EM}^\nu \\
+\la{eq:field-eq-tildeF'}
+ \partial_\mu \tld{F}'^{\mu\nu} 
+         +  \frac{\mA^2}{1 - \e^2} \tld{A}'^\nu &= 
+         \frac{\e}{\sqrt{1 - \e^2}} J_\tx{EM}^\nu \\
+    \dd{P_\mu}{\tau} &= e \tld{F}^{\mu\nu} U_\nu
+     + \frac{\e}{\sqrt{1 - \e^2}} e \tld{F}'^{\mu\nu} U_\nu. 
+\la{eq:lorentz-force-mixed}    
+}
+These three equations are precisely what we would infer from the Lagrangian in \Eq{eq:kinetic-L}. 
+That is a good sanity check. 
+It would probably be cleaner to first go from \Eq{eq:interaction-L} to \Eq{eq:kinetic-L}, then get the uncoupled field equations immediately from \Eq{eq:kinetic-L}, and then use \Eqs{eq:tildeA}{eq:tildeA'} to rewrite those field equations in terms of the active/sterile fields, yielding \Eqs{eq:field-eq-F}{eq:field-eq-F'}.
+
+
+Now let's get equations involving explicitly the electric and magnetic fields alone. 
+For reference the equations in terms of active/sterile fields are 
+\eqa{
+\la{eq:field-eq-F-rep}
+\partial_\mu F^{\mu\nu} &=  
+     \e \partial_\mu F'^{\mu\nu} + J_\tx{EM}^\nu \\
+\la{eq:field-eq-F'-rep}
+    \partial_\mu F'^{\mu\nu} + \mA^2 A'^\nu &=
+     \e \partial_\mu F^{\mu\nu}  \\
+\la{eq:lorentz-force-F-rep}
+    \dd{P_\mu}{\tau} &= e F^{\mu\nu} U_\nu. 
+}
+Note that the usual Maxwell equations will apply to the combination $\vE - \e \vE'$ and $\vB - \e \vB'$, while the combinations $\vE' - \e \vE$ and $\vB' - \e \vB$ obey Maxwell-like equations with an effective source $-\mA^2 A'_\mu$. 
+The fact that the potentials themselves appear in the field equations is expected for a massive vector.  
+We have 
+\eqa{
+    \grad \cdot \lp  \vE - \e \vE' \rp &=  \rho_\tx{EM} \\
+    \grad \times \lp \vB - \e \vB' \rp &=  
+    \ddO{t} \lp  \vE - \e \vE' \rp  
+    + \vec{j}_\tx{EM} \\
+    \grad \cdot \lp  \vE' - \e \vE \rp &=  
+     - \mA^2 \phi' \\
+     \grad \times \lp \vB' - \e \vB \rp &=  
+    \ddO{t} \lp  \vE' - \e \vE \rp  
+     - \mA^2 \vA' 
+}
+and since $F$ and $F'$ are both anti-symmetric, both sets of field satisfy the source-less equations
+\eqa{
+    \grad \cdot \vB &= 0 \\
+    \grad \times \vE &= - \dd{\vB}{t} \\
+    \grad \cdot \vB' &= 0 \\
+    \grad \times \vE' &= - \dd{\vB'}{t}.
+}
+We can thus identify two effective sources. 
+The active field is sourced by 
+\eqa{
+    \rho_\tx{eff}^\tx{active} 
+    &= \rho_\tx{EM} + \e \grad \cdot \vE' \\
+    \vec{j}_\tx{eff}^\tx{active} 
+    &= \vec{j}_\tx{EM} - \e \dd{\vE'}{t}
+    + \e \grad \times \vB'
+}
+and the sterile is sourced by
+\eqa{
+    \rho_\tx{eff}^\tx{sterile} 
+    &=  \e \grad \cdot \vE \\
+    \vec{j}_\tx{eff}^\tx{sterile} 
+    &= - \e \dd{\vE}{t}
+    + \e \grad \times \vB
+}
+Note that these both satisfy $\partial_t \rho + \grad \cdot \vec{j} = 0$.
+They are of course the same effected sourced identified in the Lagrangians in \Eqs{eq:L-with_jeff}{eq:L-jeff-F'}, since 
+\eqa{
+    \partial_\mu F^{\mu,0} &= \grad \cdot \vE \\
+    \partial_\mu F^{\mu, i} &=  
+    -\partial_t E_i + \lp  \grad \times \vB\rp_i 
+}
+And we can rewrite the field equations to be Maxwell/Proca equations with the effective sources 
+\eqa{
+    \grad \cdot  \vE &=  \rho_\tx{eff}^\tx{active}  \\
+    \grad \times \vB - \dd{\vE}{t} &=  
+     \vec{j}_\tx{eff}^\tx{active}  \\
+    \grad \cdot  \vE'  + \mA^2 \phi' &=  \rho_\tx{eff}^\tx{sterile} \\
+     \grad \times \vB' - \dd{\vE'}{t}    + \mA^2 \vA' &=  
+     \vec{j}_\tx{eff}^\tx{sterile} .
+}
+We now obtain the wave equations for the electric fields in the usual manner. 
+We will eliminate magnetic fields to working entirely in terms of electric fields, since in any problem the magnetic field is determined once the electric is fully known. 
+Take the curl of Faraday's laws and apply the identity $\grad \times \grad \times \vec{F} = \grad \lp  \grad \cdot \vec{F} \rp - \nabla^2 \vec{F}$,
+\eqa{
+    \grad \lp  \grad \cdot \vE \rp - \nabla^2 \vE
+     &= - \ddO{t} \lp  \grad \times \vB \rp 
+}
+Eliminate the magnetic field and the grad-divergence term:
+\eqa{ 
+    \grad \rho_\tx{eff}^\tx{active} 
+    -  \nabla^2 \vE
+     &= - \ddO{t} \lp  
+     \dd{\vE}{t} + \vec{j}_\tx{eff}^\tx{active} \rp \\
+     \lp  \partial^2_t - \nabla^2 \rp \vE &= 
+- \grad \rho_\tx{eff}^\tx{active} - \partial_t \vec{j}_\tx{eff}^\tx{active} .
+}
+Now the effective source combination appearing here is 
+\eqa{
+     \grad \rho_\tx{eff}^\tx{active} + \partial_t \vec{j}_\tx{eff}^\tx{active}
+     &= \grad \rho_\tx{SM} + \partial_t \vec{j}_\tx{SM}
+     + \grad \lb \e \grad \cdot \vE' \rb 
++ \partial_t \lb - \e \dd{\vE'}{t}
+    + \e \grad \times \vB' \rb \\
+     &= \grad \rho_\tx{SM} + \partial_t \vec{j}_\tx{SM}
+     +\e \lb  \grad \lp  \grad \cdot \vE' \rp 
+     - \partial^2_t \vE'
+    +  \partial_t \grad \times \vB' \rb 
+}
+and using Faraday's law
+\eqa{
+    \partial_t \grad \times \vB' &= 
+    - \grad \times \grad \times \vE' \\
+    &= - \grad \lp  \grad \cdot \vE' \rp + \nabla^2 \vE' \\
+\Rightarrow \qq 
+ \grad \rho_\tx{eff}^\tx{active} + \partial_t \vec{j}_\tx{eff}^\tx{active}
+     &= \grad \rho_\tx{SM} + \partial_t \vec{j}_\tx{SM}
+     +\e \lb  \nabla^2 \vE' 
+     - \partial^2_t \vE'\rb \\
+}
+So the active electric field obeys 
+\eqa{
+    \lp  \partial^2_t - \nabla^2 \rp \vE &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+     +\e \lb\partial^2_t \vE' - \nabla^2 \vE' \rb.
+}
+Now we repeat the process for the sterile electric field. 
+\eqa{
+    \grad \lp  \grad \cdot \vE' \rp - \nabla^2 \vE'
+     &= - \ddO{t} \lp  \grad \times \vB' \rp  \\
+     \grad \lp  \rho_\tx{eff}^\tx{sterile} - \mA^2 \phi' \rp
+    -  \nabla^2 \vE'
+     &= - \ddO{t} \lp  
+ \dd{\vE'}{t} + \vec{j}_\tx{eff}^\tx{sterile} - \mA^2 \vA' 
+ \rp \\
+     \partial_t^2 \vE' 
+     -  \mA^2 \lp   \grad \phi' + \partial_t \vA' \rp
+    -  \nabla^2 \vE'
+     &= - \grad \rho_\tx{eff}^\tx{sterile} 
+     - \partial_t \vec{j}_\tx{eff}^\tx{sterile}  \\
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE'
+     &= - \grad \rho_\tx{eff}^\tx{sterile} 
+     - \partial_t \vec{j}_\tx{eff}^\tx{sterile}  .
+}
+And as above, 
+\eqa{
+     \grad \rho_\tx{eff}^\tx{sterile} 
+     + \partial_t \vec{j}_\tx{eff}^\tx{sterile}
+     &= \grad \lb \e \grad \cdot \vE \rb 
++ \partial_t \lb - \e \dd{\vE}{t}
+    + \e \grad \times \vB \rb \\
+    &= \e \lb  \nabla^2 \vE 
+     - \partial^2_t \vE\rb
+}
+so together we have 
+\eqa{
+\la{eq:double-wave-E}
+    \lp  \partial^2_t - \nabla^2 \rp \vE &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+     +\e \lp  \partial^2_t - \nabla^2 \rp \vE' \\
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE'
+     &= \e \lp  \partial^2_t  - \nabla^2 \rp \vE .
+}
+and we can further simplify 
+\eqa{
+    \lp  \partial^2_t - \nabla^2 \rp \vE &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+     +\e \lb - \mA^2 \vE' + \e \lp  \partial^2_t  - \nabla^2 \rp \vE \rb \\
+   \lp  1 - \e^2 \rp 
+   \lp  \partial^2_t - \nabla^2 \rp \vE &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+      - \e \mA^2 \vE' 
+}
+and our final pair of equation is 
+\eqa{
+\la{eq:active-E-wave}
+   \lp  1 - \e^2 \rp 
+   \lp  \partial^2_t - \nabla^2 \rp \vE &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+      - \e \mA^2 \vE' \\
+\la{eq:sterile-E-wave}
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE'
+     &= \e \lp  \partial^2_t  - \nabla^2 \rp \vE .
+}
+I would like to eliminate the $\partial_t^2 - \nabla^2$ operator on the right side of the sterile equation in favor of something simpler, while explicitly keeping the sources out of the sterile equation. 
+We can so this at the cost of introducing a mass for the active mode. 
+Define the field
+\eqa{
+    \vE_S = \vE' - \e E
+}
+then \Eq{eq:sterile-E-wave} becomes
+\eqa{
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE'
+     &= \e \lp  \partial^2_t  - \nabla^2 \rp \vE  \\
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE'
+     &= \e \lp  \partial^2_t  - \nabla^2 + \mA^2 \rp \vE - \e \mA^2 \vE \\
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \lb \vE' - \e \vE \rb 
+     &= - \e \mA^2 \vE \\
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE_S 
+     &= - \e \mA^2 \vE \\
+}
+and \Eq{eq:active-E-wave} becomes
+\eqa{
+  \lp  1 - \e^2 \rp 
+   \lp  \partial^2_t - \nabla^2 \rp \vE &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+      - \e \mA^2 \vE' \\
+  \lp  1 - \e^2 \rp 
+   \lp  \partial^2_t - \nabla^2 \rp \vE &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+      - \e \mA^2 \lp \vE_s + \e \vE \rp \\
+  \lp  1 - \e^2 \rp 
+   \lp  \partial^2_t - \nabla^2 \rp \vE + \e^2 \mA^2 \vE &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+      - \e \mA^2 \vE_S \\
+}
+Now rescale $\vE$ by 
+\eqa{    
+    \vE_A = \lp 1 - \e^2 \rp \vE
+}
+and we have the pair of equations 
+\eqa{
+  \lp  \partial^2_t + \frac{\e^2 \mA^2}{1 - \e^2} - \nabla^2 \rp \vE_A &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+      - \e \mA^2 \vE_S \\
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE_S 
+     &= - \frac{\e \mA^2}{1 - \e^2} \vE_A.
+}
+And for symmetry lets rescale $\vE_S$ by 
+\eqa{
+    \vE_S' = \vE_S \sqrt{1 - \e^2}
+}
+so we have 
+\eqa{
+\la{eq:wave-massive-A}
+  \lp  \partial^2_t + \frac{\e^2 \mA^2}{1 - \e^2} - \nabla^2 \rp \vE_A &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+      - \frac{\e \mA^2}{\sqrt{1 - \e^2}} \vE_S' \\
+\la{eq:wave-massive-S'}
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE_S' 
+     &= - \frac{\e \mA^2}{\sqrt{1 - \e^2}} \vE_A.
+}
+This is probably the prettiest set we find. 
+How do these field relate to those of our original Lagrangian in \Eq{eq:interaction-L}?
+\eqa{
+    A_S' &= A_S \sqrt{1 - \e^2} 
+    = \sqrt{1 - \e^2} \lp A' - \e A  \rp \\
+    A_A &= \lp 1 - \e^2 \rp A   
+}
+This is like the mirror-image of the transformation in \Eqs{eq:tildeA}{eq:tildeA'}. 
+There we shifted $A$ and only rescaled $A'$.  
+By only scaling $A'$ and not shifting it we kept one massless mode. 
+But here we have rescaled $A$ and shifted $A'$, which indeed introduces a mass for each mode and mass mixing. 
+The mass mixing appears as the coupling in \Eqs{eq:wave-massive-A}{eq:wave-massive-S'}, which looks simpler than the kinetic mixing coupling of \Eqs{eq:active-E-wave}{eq:sterile-E-wave}.
+
+As a check, we ought to be able to derive the decoupled, kinetic mode equations as well. 
+We can immediately eliminate $\vE$ from \Eq{eq:sterile-E-wave} above, 
+\eqa{
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE'
+     &= \e \lp  \partial^2_t  - \nabla^2 \rp \vE 
+     = \pfrac{\e}{1-\e^2} \lb -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+      - \e \mA^2 \vE' \rb \\
+    \lp  \partial_t^2 +  \frac{\mA^2}{1-\e^2} -  \nabla^2 \rp \vE'
+     &= \pfrac{\e}{1-\e^2} 
+     \lb -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM} \rb \\
+    \lp  \partial_t^2 +  \frac{\mA^2}{1-\e^2} -  \nabla^2 \rp \vtE'
+     &= \frac{\e}{\sqrt{1-\e^2}} 
+     \lb -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM} \rb
+}
+and then return to \Eq{eq:double-wave-E}, which is 
+\eqa{
+    \lp  \partial^2_t - \nabla^2 \rp \lb \vE - \e \vE' \rb &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+}
+so we have 
+\eqa{
+\la{eq:wave-kinetic-E}
+    \lp  \partial^2_t - \nabla^2 \rp \vtE &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM} \\
+\la{eq:wave-kinetic-E'}
+    \lp  \partial_t^2 +  \frac{\mA^2}{1-\e^2} -  \nabla^2 \rp \vtE'
+     &= \frac{\e}{\sqrt{1-\e^2}} 
+     \lb -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM} \rb
+}
+This is indeed what we would expect from \Eq{eq:kinetic-L}.
+
+So we now have three pairs of electric field equations. 
+Which is best?
+If we know the SM source exactly, then \Eqs{eq:wave-kinetic-E}{eq:wave-kinetic-E'} are simplest to solve using the Coulomb and Yukawa Green's function, respectively. 
+However, we may immediately know the SM field but not the sources directly, e.g.~for a driven cavity mode. 
+We could find the sources from the SM field and then use \Eqs{eq:wave-kinetic-E}{eq:wave-kinetic-E'}. 
+Or we can work perturbativley in $\e$ from \Eqs{eq:active-E-wave}{eq:sterile-E-wave}. 
+The known $\vE$ and unknown SM sources solve \Eq{eq:active-E-wave} to leading order, $\Order(\e^0)$. 
+Then we find $\vE'$ at $\Order\lp \e\rp$ using $\lp  \partial_t^2 - \nabla^2\rp \vE$ as its source.
+Finally we find the $\Order\lp \e^2\rp$ correction to our original $\vE$ by taking $\e \mA^2 \vE'$ as the source for the correction. 
+One could apply the same procedure to \Eqs{eq:wave-massive-A}{eq:wave-massive-S'}, at leading order ignoring the mass term for $\vE_A$ the adopting massless cavity modes. 
+Then for the $\Order(\e^2)$ correction, include both the $\vE_S'$ and the mass term as the effective sources for the correction. 
+I believe this is the approach of \cite{Graham:2014sha} (though they may just ignore the mass correction completely).
+
+\section{Cavity LSW}
+
+\subsection{Cavity Modes}
+
+Within an empty cavity the electric field satisfies 
+\eqa{
+    \lp \partial_t^2 - \nabla^2 \rp \vE = 0. 
+}
+If $\vE_p$ is a mode of frequency $\omega_p$, then  $\vE_P$ is an eigenvector of the $\nabla^2$ operator, 
+\eqa{
+\la{eq:eigenvector}
+    \nabla^2 \vE_p = -\omega_p^2 \vE_p
+}
+and choose the normalization to be 
+\eqa{
+    \int_\tx{cavity} \diffp{3}{x} \lvl \vE_p \rvl^2 = V
+} 
+where V is the cavity volume. 
+Then $\vE_p$ is unitless, $\mathcal{E}_p$ has units of electric field and is a characteristic field value to which the mode $p$ is driven. 
+To be more specific, we can relate this to the time-averaged energy storage in the mode $p$. 
+The energy density in the EM field is 
+\eqa{
+    u = \frac{1}{2} \lp |E|^2 + |B|^2 \rp
+}
+and for a cavity mode the time-average energy in the electric field equals that of the magnetic field, and the total energy is constant in time. 
+So the stored energy is equal to that of the peak energy in the electric field, and thus we can just ignore the time dependence. 
+\eqa{
+\la{eq:stored-energy}
+    U_p = \frac{1}{2} \int_\tx{cavity} \diffp{3}{x} |\vE_p|^2 
+      &= \frac{1}{2} \mathcal{E}_p^2  V
+}
+
+Now suppose there is a source $\vec{s} = -\grad \rho - \partial_t \vec{j}$ that oscillates at a fixed frequency $\omega$ within the cavity. 
+Then the driven field satisfies
+\eqa{
+    \lp \partial_t^2 - \nabla^2 \rp \vE = \vec{s} e^{i \omega t} .
+}
+Suppose the modes $\vE_p$ form a complete, orthogonal set within the cavity. 
+It follows that we can expand 
+\eqa{
+    \vE = \Sigma_p \mathcal{E}_p \vE_p e^{i \omega_p t}.
+}
+But orthogonality, the energy is partitioned distinctly into modes 
+\eqa{
+    U =  \frac{1}{2} V \,  \Sigma_p \mathcal{E}_p^2  .
+}
+The excitation of each mode is 
+\eqa{
+    \lp \partial_t^2 - \nabla^2 \rp 
+    \Sigma_p \mathcal{E}_p \vE_p e^{i \omega t} 
+    &= \vec{s} e^{i \omega t} \\
+   \Sigma_p \mathcal{E}_p 
+   \lp -\omega^2 + \omega_p^2  \rp \vE_p e^{i \omega t} 
+    &= \vec{s} e^{i \omega t} \\
+   \mathcal{E}_p  \lp -\omega^2 + \omega_p^2  \rp  V
+    &= \int_\tx{cavity} \diffp{3}{x}  \lb \vec{s} \cdot  \vE_p \rb 
+}
+finally
+\eqa{
+   \mathcal{E}_p &= 
+   \frac{1}{ \omega_p^2 -\omega^2 } \,
+   \lp \frac{1}{V} \int_\tx{cavity} \diffp{3}{x} \vec{s} \cdot \vE_p \rp
+}
+
+Now let's include dissipation.  
+We can artificially add a term to the wave equation, pretending that the interior of the cavity is filled with an ohmic conductor of conductivity $\sigma$. 
+This generates a dissipation current $\vec{j}_d = \sigma \vE$ and the field obey,  
+\eqa{
+    \lp \partial_t^2 - \nabla^2 \rp \vE &= - \partial_t \vec{j}_d \\ 
+    \lp \partial_t^2 - \nabla^2 \rp \vE &= - \sigma \partial_t \vE \\ 
+    \lp \partial_t^2 + \sigma \partial_t - \nabla^2 \rp \vE &= 0.
+}
+Now the energy dissipated from the $p$ mode is 
+\eqa{
+    P &= \int_\tx{cavity} \diffp{3}{x} \vE \cdot \vec{j}_d
+    = \sigma \int_\tx{cavity} \diffp{3}{x} \lvl \vE \rvl^2 
+    = \sigma \mathcal{E}_p^2 V \cos^2\lp \omega_p t \rp \\
+  \int_\tx{cycle} \diff{t} P &= \sigma \mathcal{E}_p^2 V \frac{\pi}{\omega_p}
+  = \sigma U_p \frac{2\pi}{\omega_p}
+}
+and the $Q$ factor is defined to be 
+\eqa{
+    Q = \frac{2 \pi U }{\int_\tx{cycle} \diff{t} P} 
+    = \frac{\omega U}{\bar{P}}
+}
+where $\bar{P}$ is the time-averaged dissipation rate
+\eqa{
+    \bar{P} = 
+    \frac{\omega}{2 \pi} \int_\tx{cycle} \diff{t} P
+    = \sigma \mathcal{E}_p^2 V \frac{1}{2}
+    = \sigma U_p.
+}
+The $Q$ factor related to $\sigma$ as 
+\eqa{
+\la{eq:sigma-to-Q}
+    Q = \frac{\omega_p}{\sigma}.
+}
+and the field equation can be written
+\eqa{
+    \lp \partial_t^2 
+    + \frac{\omega_p}{Q} \partial_t - \nabla^2 \rp \vE &= 0 .
+}
+If the dissipation was truly dominated by a space-filling ohmic conductor, then this equation would hold for all modes with $Q$ varying linearly in frequency as \Eq{eq:sigma-to-Q}.  
+In reality the dissipation is more complicated, due I think to the fact that the modes field penetrate some skin depth into the wall which have some small resistivity. 
+But we can treat $Q$ as some phenomenological parameter that varies with mode in a complicated way. 
+
+We now expand the field generated by a source $\vec{s}$ in the same modes $\vE_p$ as above, obeying \Eq{eq:eigenvector}. 
+\eqa{
+    \lp \partial_t^2 
+    + \frac{\omega_p}{Q} \partial_t - \nabla^2 \rp 
+    \Sigma_p \mathcal{E}_p \vE_p &= \vec{s} \\
+    \Sigma_p \mathcal{E}_p \lp -\omega^2
+    + i \frac{\omega_p}{Q} \omega + \omega_p^2 \rp 
+     \vE_p &= \vec{s} \\
+    V \mathcal{E}_p \lp -\omega^2
+    + i \frac{\omega_p}{Q} \omega + \omega_p^2 \rp 
+     &= \int_\tx{cavity} \diffp{3}{x}  \vec{s} \cdot \vE_p .
+}
+Note the bandwidth is as expected. 
+Expand $\omega = \omega_p + \delta \omega$, 
+\eqa{
+    V \mathcal{E}_p \lb -\lp \omega_p^2 + 2 \delta \omega \omega_p\rp
+    + i \frac{\omega_p}{Q} \lp \omega_p +\delta \omega\rp + \omega_p^2 \rb
+     &\approx \int_\tx{cavity} \diffp{3}{x}  \vec{s} \cdot \vE_p \\
+    V \mathcal{E}_p \omega_p \lb -2 \delta \omega
+    + i \frac{1}{Q} \lp \omega_p + \delta \omega\rp  \rb
+     &\approx \int_\tx{cavity} \diffp{3}{x}  \vec{s} \cdot \vE_p \\
+    V \mathcal{E}_p \omega_p \lb -2 \delta \omega
+    + i \frac{\omega_p}{Q}  \rb
+     &\approx \int_\tx{cavity} \diffp{3}{x}  \vec{s} \cdot \vE_p \\
+    V^2 \mathcal{E}_p^2 \omega_p^2 
+    \lb 4 \delta \omega^2
+    + \frac{\omega_p^2}{Q^2}  \rb
+     &\approx \lvl \int_\tx{cavity} \diffp{3}{x}  \vec{s} \cdot \vE_p \rvl^2.
+}
+The lineshape is 
+\eqa{
+    \mathcal{E}_p^2     
+     &\approx 
+     \pfrac{Q^2}{V^2 \omega_p^4}
+     \pfrac{1}
+     {\frac{4 Q^2 \delta \omega^2}{\omega_p^2} + 1}
+     \lvl \int_\tx{cavity} \diffp{3}{x}  \vec{s} \cdot \vE_p \rvl^2.
+}
+and we have resonance when $\delta \omega \ll \omega_p/2Q$, which yields
+\eqa{
+\la{eq:res-Q-amplitude}
+    \mathcal{E}_p = 
+    \frac{- i Q}{\omega_p^2}
+    \lp \frac{1}{V} \int_\tx{cavity} \diffp{3}{x} 
+    \vec{s} \cdot \vE_p \rp.
+}
+
+The energy stored on resonance is 
+\eqa{
+    U_p = 
+    \frac{Q^2}{2 \omega_p^4 V}
+    \lvl \int_\tx{cavity} \diffp{3}{x} 
+    \vec{s} \cdot \vE_p \rvl^2
+}
+and the available power is 
+\eqa{
+    \bar{P} =  \frac{Q}{2 \omega_p^3 V}
+    \lvl \int_\tx{cavity} \diffp{3}{x} 
+    \vec{s} \cdot \vE_p \rvl^2.
+}
+
+\subsection{Hidden Photon Mixing}
+
+Consider two EM cavities, one of which is pumped with power and other is not. 
+The unpumped cavity will be rung up due to the hidden photon. 
+This is easily calculated with the mass-mixing basis, \Eqs{eq:wave-massive-A}{eq:wave-massive-S'} repeated here
+\eqa{
+  \lp  \partial^2_t + \frac{\e^2 \mA^2}{1 - \e^2} - \nabla^2 \rp \vE_A &=  
+    -\grad \rho_\tx{SM} - \partial_t \vec{j}_\tx{SM}
+      - \frac{\e \mA^2}{\sqrt{1 - \e^2}} \vE_S' \\
+\la{eq:wave-massive-S'-3}
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE_S' 
+     &= - \frac{\e \mA^2}{\sqrt{1 - \e^2}} \vE_A.
+}
+To zeroth order in $\e$ we have $\vE_S'=0$ and $\vE_A = \vE_0$ is some known, massless, excited cavity mode (or sum of modes). 
+This satisfies 
+\eqa{
+    \lp  \partial^2_t - \nabla^2 \rp \vE_0 &=  
+    -\grad \rho_0 - \partial_t \vec{j}_0
+}
+where $\rho_0$, $\vec{j}_0$ are the sources within the cavity and on its walls that drive $\vE_0$ and maintain its boundary conditions. 
+
+$\vE_0$ sources the $\vE_S'$ field. 
+Assume that $\vE_0$ oscillates in time as $e^{i \omega t}$, then to order $\e^2$ we have 
+\eqa{
+    \lp  \partial_t^2 +  \mA^2 -  \nabla^2 \rp \vE_S' 
+     &\approx - \e \mA^2 \vE_0 e^{i \omega t} \\
+\la{eq:sourced-source}
+\Rightarrow \qq
+    \vE_S' &= \frac{- \e \mA^2 }{4 \pi} \int \diffp{3}{x_s}
+    \frac{\vE_0(\vec{x}_s)}{\lvl \vec{x}_s - \vec{r}\rvl}
+    e^{- k \lvl \vec{x}_s - \vec{r}\rvl + i \omega t}
+}
+where $k = \sqrt{\mA^2-\omega^2}$ and the integral over $\vec{x}_s$ is taken over the volume of the driven, source cavity. 
+Note when $0 \leq \omega < \mA$ we have $0 < k \leq \mA$ and $\vE_S'$ is exponentially decaying. 
+If $\mA < \omega$ then $k=iq$, where $q>0$ so that $\vE_S'$ is an outward-going spherical wave at large distances from the source cavity.
+
+$\vE_S'$ is not shielded from the detection cavity. 
+This is because the Lorentz force law in this basis is 
+\eqa{
+    \vec{F} = q \vE_A + q \vec{v} \times \vB_A
+}.
+i.e., $\vE_S$ drives no screening currents and thus takes no notice of conductors. 
+Within the detection cavity, \Eq{eq:sourced-source} is a source for an additional $\vE_A$ field. 
+This is field is generated only by sources within the cavity, i.e. $\vE_S$ within the cavity, as the walls will screen anything external sources. 
+Inside the cavity we have 
+\eqa{
+\lp  \partial^2_t + \frac{\e^2 \mA^2}{1 - \e^2} - \nabla^2 \rp \vE_A &=  
+      - \frac{\e \mA^2}{\sqrt{1 - \e^2}} \vE_S' \\
+\lp  \partial^2_t  - \nabla^2 \rp \vE_A &=  
+      - \frac{\e \mA^2}{\sqrt{1 - \e^2}} \vE_S'
+      - \frac{\e^2 \mA^2}{1 - \e^2}\vE_A
+}
+where we treat the mass term pertrubatively as an effective source. 
+We can in fact ignore it - the sterile source term is order $\sim \e E_s' \sim \e^2$, so at leading order $E_A \sim \e^2$ and the mass-term source is $\sim \e^2 E_A^2 \sim \e^4$. 
+So we have to leading order in $\e$ 
+\eqa{
+\lp  \partial^2_t  - \nabla^2 \rp \vE_A &\approx  
+      - \e \mA^2 \vE_S'
+}
+where $\vE_S'$ is given by \Eq{eq:sourced-source}.
+The excitation of a cavity mode by this source is given by \Eq{eq:res-Q-amplitude} where $\vec{s} = - \e \mA^2 \vE_S'$:
+\eqa{
+    \mathcal{E}_p = 
+    \frac{i Q \e \mA^2}{\omega_p^2}
+    \lp \frac{1}{V} \int \diffp{3}{x_d} 
+    \vE_S' \cdot \vE_p \rp.
+}
+and the integral is over the volume of the detection cavity. 
+Now insert \Eq{eq:sourced-source}, 
+\eqa{
+    \mathcal{E}_p &= 
+    \frac{i Q \e \mA^2}{\omega_p^2}
+    \lp \frac{1}{V} \int \diffp{3}{x_d} 
+    \vE_p(\vec{x}_d) \cdot
+    \lb \frac{- \e \mA^2 }{4 \pi} \int \diffp{3}{x_s}
+    \frac{\vE_0(\vec{x}_s)}{\lvl \vec{x}_s - \vec{x}_d \rvl}
+    e^{- k \lvl \vec{x}_s - \vec{x}_d \rvl} \rb \rp \\
+   &=  \frac{-i Q \e^2 \mA^4}{4 \pi \omega_p^2 V}
+    \lp \int \diffp{3}{x_d} \int \diffp{3}{x_s} 
+    \vE_p(\vec{x}_d) \cdot
+    \frac{\vE_0(\vec{x}_s)}{\lvl \vec{x}_s - \vec{x}_d \rvl}
+    e^{- k \lvl \vec{x}_s - \vec{x}_d \rvl} \rp.
+}
+Lets relabel so that all source cavity quantities are denoted $s$ and detection cavity $d$, 
+\eqa{
+    \mathcal{E}_d 
+   &=  \frac{-i Q_d \e^2 \mA^4}{4 \pi \omega^2 V_d} 
+   \mathcal{E}_s
+    \lp \int \diffp{3}{x_d} \int \diffp{3}{x_s} 
+    \frac{\vE_d(\vec{x}_d) \cdot \vE_s(\vec{x}_s)}
+    {\lvl \vec{x}_s - \vec{x}_d \rvl}
+    e^{- k \lvl \vec{x}_s - \vec{x}_d \rvl} \rp.
+}
+This has the correct units. 
+Recall that the mode functions $\vE_s$ and $\vE_d$ are unitless. 
+The available power in the detection cavity is $P = \omega U /Q = \mathcal{E}^2 V \omega/ 2 Q$.
+\eqa{
+\la{eq:general-signal-power}
+    \bar{P}_d 
+   &=  \frac{Q_d \e^4 \mA^8}{32 \pi^2 \omega^3 V_d} 
+   \mathcal{E}_s^2 
+   \lvl \int \diffp{3}{x_d} \int \diffp{3}{x_s} 
+    \frac{\vE_d(\vec{x}_d) \cdot \vE_s(\vec{x}_s)}
+    {\lvl \vec{x}_s - \vec{x}_d \rvl}
+    e^{- \sqrt{m^2 - \omega^2} \lvl \vec{x}_s - \vec{x}_d \rvl} \rvl^2.
+}
+
+\subsection{Partitioned Box}
+
+Consider a rectangular cavity which is partitioned by a conducting wall. 
+Let the $z$ direction be perpendicular to the partition, and let the two cavities have square cross-section $a \times a$ in the $x$ and $y$ directions and length $H$ in the $z$ direction. 
+Let the wall have thickness $\tau$, so that the total dimension of the box are $a \times a \times \lp 2 H + \tau \rp$, ignoring the thickness of the outer walls. 
+
+\subsubsection{Scaling Estimate}
+\la{eq:part-box-estimate}
+
+Lets do the integral in \Eq{eq:general-signal-power}.
+Consider specifically the limit $\omega \ll m$ so that $k \approx m$ and further that $m^{1} \ll a, H$.
+That is, the hidden photon is very short range compared to the sizes of the cavities.  
+In this limit we have the following estimate. 
+The integral has support only when $|\vec{x}_s - \vec{x}_d| < m^{-1}$. 
+At fixed $\vec{x}_d$, we have a contribution only from those $\vec{x}_s$ within the volume $m^{-3}$ around $\vec{x}_d$.  
+There are no such $\vec{x}_s$ for most points $\vec{x}_d$ in the detection cavity since $\vec{x}_s$ is in the source cavity.  
+If $\tau m \gg 1$ then there are no such points, but if $\tau m \ll 1$ then there is thin sheet of volume $a^2 m^{-1}$ adjacent to the partition where the integral has support. 
+Within that sheet we have at fixed $\vec{x}_d$
+\eqa{
+    \int \diffp{3}{x_s} 
+    \frac{\vE_s(\vec{x}_s)}
+    {\lvl \vec{x}_s - \vec{x}_d \rvl}
+    e^{- k \lvl \vec{x}_s - \vec{x}_d \rvl} 
+    &\sim 
+    \int_{\tx{hemisphere } m^{-1} } \diffp{3}{x_s} 
+   \frac{ \vE_s(x_s, y_s, a)}{m^{-1}} \\
+   &\sim \frac{2 \pi}{3} m^{-2} E_{s, \tx{wall}}
+} 
+where $ E_{s,\tx{wall}}$ denotes the typical value of the source mode function on the partition-wall of the cavity. 
+Now integrate over the detection mode, 
+\eqa{
+    \int \diffp{3}{x_d} \vE_d(\vec{x}_d) 
+    \lb \int \diffp{3}{x_s} 
+    \frac{\vE_s(\vec{x}_s)}
+    {\lvl \vec{x}_s - \vec{x}_d \rvl}
+    e^{- k \lvl \vec{x}_s - \vec{x}_d \rvl} \rb
+    &\sim \int_{\tx{sheet } a^2 m^{-1}} \diffp{3}{x_d} \vE_d(\vec{x}_d) 
+      \lb \frac{2 \pi}{3} m^{-2} E_{s, \tx{wall}} \rb \\
+    &\sim \frac{2 \pi}{3} a^2 m^{-3} E_{s, \tx{wall}} E_{d, \tx{wall}}
+} 
+The mode function are unitless, and $\sim \Order(1)$ as we have normalized them to the total volume. 
+With foresight we take $E_{d, \tx{wall}} \cdot E_{s, \tx{wall}} \approx 2$ (see \Eq{eq:optimal-area-overlap}). 
+Then
+\eqa{
+\int \diffp{3}{x_d} \int \diffp{3}{x_s} 
+    \frac{\vE_d(\vec{x}_d) \cdot \vE_s(\vec{x}_s)}
+    {\lvl \vec{x}_s - \vec{x}_d \rvl}
+    e^{- k \lvl \vec{x}_s - \vec{x}_d \rvl} 
+    \approx \frac{4 \pi}{3} \frac{a^2}{m^3}
+}
+The signal power is 
+\eqa{
+\la{eq:Ps-estimate-highmass}
+    P_d \approx \frac{Q_d \e^4 \mA^8}{32 \pi^2 \omega^3 a^2 H} 
+   \mathcal{E}_s^2 \cdot \frac{16 \pi^2}{9} \frac{a^4}{m^6} 
+   \approx \frac{Q_d \e^4 \mA^2 a^2 \mathcal{E}_s^2}
+   {18 \, \omega^3 H} 
+   \qq \qq \lb m \gg \omega \rb
+}
+In the limit that $m \ll \omega, a^{1} H^{-1}$, the integral out to evaluate to 
+\eqa{
+\int \diffp{3}{x_d} \int \diffp{3}{x_s} 
+    \frac{\vE_d(\vec{x}_d) \cdot \vE_s(\vec{x}_s)}
+    {\lvl \vec{x}_s - \vec{x}_d \rvl}
+    e^{- k \lvl \vec{x}_s - \vec{x}_d \rvl} 
+    \sim \frac{a^2 H \cdot a^2 H}{H} E_{s, \tx{interior}} E_{d, \tx{interior}}
+    \sim a^4 H
+}
+where $E_{s, \tx{interior}}$ and $E_{d, \tx{interior}}$ are now the typical values of the mode functions over the interior and I've taken their product to be $\approx 1$ as the modes are normalized to have a volume-averaged value of $1$.
+The power is 
+\eqa{
+\la{eq:Ps-estimate-lowmass}
+    P_d \approx \frac{Q_d \e^4 \mA^8}{32 \pi^2 \omega^3 a^2 H} 
+   \mathcal{E}_s^2 \cdot a^8 H^2
+   \approx \frac{Q_d \e^4 \mA^8 a^6 H \mathcal{E}_s^2}
+   {32 \pi^2 \, \omega^3} 
+   \qq \qq \lb m \ll \omega \rb
+}
+
+
+\subsubsection{Rectangular Cavity Modes}
+
+Let the modes have time dependence 
+\eqa{
+    \vec{E}(\vec{r}, t) &= \vec{E}_p(\vec{r}) \,  e^{i \omega_p t} \\
+    \vec{B}(\vec{r}, t) &= \vec{B}_p(\vec{r}) \,  e^{i \omega_p t}.
+}
+Then we have the following TM modes
+\eqa{
+\la{eq:E_TM_x}
+    E_x &= \frac{ -\sqrt{8} \, k_z k_x}{\omega \sqrt{k_x^2 + k_y^2}}
+    \cos\lp k_x x \rp  \sin\lp k_y y \rp  \sin\lp k_z z \rp \\
+\la{eq:E_TM_y}
+    E_y &= \frac{ -\sqrt{8} \, k_z k_y}{\omega \sqrt{k_x^2 + k_y^2}}
+    \sin\lp k_x x \rp  \cos\lp k_y y \rp  \sin\lp k_z z \rp \\
+\la{eq:E_TM_z}
+    E_z &= \frac{ \sqrt{8} \, \sqrt{k_x^2 + k_y^2}}{\omega}
+    \sin\lp k_x x \rp  \sin\lp k_y y \rp  \cos\lp k_z z \rp \\
+}
+and TE 
+\eqa{
+\la{eq:E_TE_x}
+    E_x &= \frac{ i \sqrt{8} \, k_y}{\sqrt{k_x^2 + k_y^2}}
+    \cos\lp k_x x \rp  \sin\lp k_y y \rp  \sin\lp k_z z \rp \\
+\la{eq:E_TE_y}
+    E_y &= \frac{-i \sqrt{8} \, k_x}{\sqrt{k_x^2 + k_y^2}}
+    \sin\lp k_x x \rp  \cos\lp k_y y \rp  \sin\lp k_z z \rp \\
+\la{eq:E_TE_z}
+    E_z &= 0
+}
+with the frequency 
+\eqa{
+    \omega = \sqrt{ k_x^2 + k_y^2 + k_z^2 }.
+}
+The magnetic fields are given by Farday's law, 
+\eqa{
+    \grad \times \vE &= -\partial_t \vB = - i \omega \vB \\
+    \vB &= \frac{i}{\omega} \grad \times \vE.
+}
+The resonance condition is that a half-integer number of wavelength fit inside the box in all directions, 
+\eqa{
+    k_x &= \frac{\pi}{a} n_x \\
+    k_y &= \frac{\pi}{a} n_y \\
+    k_z &= \frac{\pi}{H} n_z
+}
+where at most two of the $n_i$ may vanish. 
+The above modes are normalized to the volume
+\eqa{
+\la{eq:norm}
+    \int \diffp{3}{x} |\vec{E}|^2
+    = \int \diffp{3}{x} |\vec{B}|^2 = a^2 H.
+}
+See mathematica "RectangularCavity.nb" for verification that the above are indeed solutions of Maxwell's equations with the correct boundary conditions and that they satisfy \Eq{eq:norm}.
+
+\subsubsection{Optimal Mode Choice}
+
+Lets choose a pair of source and detection modes optimized in the limit $m \gg \omega, a^{-1}, H^{-1}$. 
+From the estimate in \Sec{eq:part-box-estimate}, we see that the signal will scale in this limit as the square of the area integral 
+\eqa{
+    I_\tx{wall} = \frac{1}{a^2} 
+    \int_\tx{wall} \diff{x}\diff{y} \vE_s \cdot \vE_d
+}
+that is, the average of the overlap of the electric fields on the partition wall. 
+
+We want to maximize the magnitude of the electric field along the partitioned wall, which is $z=0$ for the detection cavity and $z=H/a$ for the source cavity.
+This vanishes for TE as this is exactly the conducting wall's boundary condition --- the electric field must be perpendicular to the wall. 
+So we need TM. 
+For those modes (for the same reason) the only nonzero component of electric field will be in the $z$ direction. 
+Looking at the mode function in Eqs.~\ref{eq:E_TM_x}-\ref{eq:E_TE_z}, this is clear as $\sin\lp \pi n_z \frac{z}{H} \rp$ vanishes when $z=0$ or $z=H$. 
+Further, $\cos\lp \pi n_z \frac{z}{H} \rp$ is $\pm 1$ when $z=0$ or $z=H$, so we have that
+\eqa{
+    \lb \vE_s \cdot \vE_d \rb_\tx{wall} &= 
+    \lb \frac{ \sqrt{8} \, \sqrt{k_x^2 + k_y^2}}{\omega}
+    \sin\lp \pi n_x \frac{x}{a}\rp  \sin\lp \pi n_y \frac{y}{a} \rp 
+    \cos\lp \pi n_z \rp \rb
+    \lb \frac{ \sqrt{8} \, \sqrt{k_x^{'2} + k_y^{'2}}}{\omega'}
+    \sin\lp \pi n'_x \frac{x}{a} \rp  \sin\lp \pi n'_y  \frac{y}{a}\rp \rb \\
+    &=
+    \lp -1 \rp^{n_z}
+    \frac{ 8 \, \sqrt{k_x^2 + k_y^2} \sqrt{k_x^{'2} + k_y^{'2}}}
+    {\omega \omega'}
+    \sin\lp \pi n_x \frac{x}{a} \rp  \sin\lp \pi n'_x \frac{x}{a} \rp 
+    \sin\lp \pi n_y \frac{y}{a} \rp \sin\lp \pi n'_y \frac{y}{a} \rp .
+}
+Here primes indicate the detection cavity and unprimed the source cavity. 
+Now $\sin$ is orthogonal on this interval, so we must choose $n_x = n'_x$ and $n_y = n'_y$. 
+We also cannot chose either of them to vanish. 
+It is a fact for non-zero integers $n$ and $m$ that
+\eqa{
+    \int_0^a \diff{x} \sin\lp n \frac{x}{a} \rp \sin\lp m \frac{x}{a} \rp 
+    = \frac{a}{2} \delta_{n,m}
+}
+so we have 
+\eqa{
+    \int_\tx{wall} \diff{x}\diff{y} \vE_s \cdot \vE_d 
+    = \lp -1 \rp^{n_z} \, 2a^2 \, \frac{\lp k_x^2 + k_y^2 \rp}{\omega^2}
+    &= \lp -1 \rp^{n_z} \, 2a^2 \, 
+    \lp 1 - \frac{k_z^2}{\omega^2} \rp \\
+\la{eq:optimal-area-overlap}
+    \Rightarrow \qq
+    \lvl I_\tx{wall} \rvl &\leq 2
+}
+where the inequality is saturated if we choose $n_z = 0$. 
+Our best signal thus comes from using identical modes in each cavity, and using any of the $\tx{TM}_{n, m, 0}$ modes. 
+It looks like it should not matter which $n$ and $m$ we choose, so for simplicity we can take $\tx{TM}_{110}$. 
+
+\subsubsection{Numerical Overlap Integrals}
+
+Now as a check on \Eqs{eq:Ps-estimate-highmass}{eq:Ps-estimate-lowmass} we can do the overlap integral numerically. 
+This will also give us the exact extrapolation in the limit $m \approx \omega$, which we need make a pretty estimate of the reach. 
+
+Let's focus the formalism on the regime $m\gg\omega$ and normalize the integral as 
+\eqa{
+    G = \frac{m^3}{a^2} \int \diffp{3}{x_d} \int \diffp{3}{x_s} 
+    \frac{\vE_d(\vec{x}_d) \cdot \vE_s(\vec{x}_s)}
+    {\lvl \vec{x}_s - \vec{x}_d \rvl}
+    e^{- k \lvl \vec{x}_s - \vec{x}_d \rvl} 
+}
+so the signal power is 
+\eqa{
+\la{eq:Psig}
+    \bar{P}_d 
+   &=  \frac{Q_d \e^4 \mA^2 a^2 \mathcal{E}_s^2 }{32 \pi^2 \omega^3 H} 
+   \lvl G \rvl^2.
+}
+and we expect $G$ is a constant $G \sim 0.5$ for a good choice of modes when $m\gg\omega$.
+Let write the integral in term of coordinates centered on the lower left corner of each sub-cavity, so the integrals both run over $0 < x < a$, $0<y<a$, and $0<z<H$. 
+Let $\vec{x}_s = \vec{r}_s$ have origin on the corner of the source sub-cavity. 
+Then let $\vec{x}_d = (H + \tau) \hat{z} + \vec{r}_d$, where $\vec{r}_d$ has origin on the corner of the detection sub-cavity. 
+Then 
+\eqa{
+    \lvl \vec{x}_s  - \vec{x}_d \rvl^2 = 
+    \lp x_d - x_s \rp^2
+    + \lp y_d - y_s \rp^2
+    + \lp H + \tau + z_d - z_s \rp^2 
+    \equiv \Delta^2
+}
+and 
+\eqa{
+    G = \frac{m^3}{a^2} 
+    \int_0^a \diff{x_d} \int_0^a \diff{y_d} \int_0^H \diff{z_d} 
+    \int_0^a \diff{x_s} \int_0^a \diff{y_s} \int_0^H \diff{z_s} 
+    \vE_d(\vec{r}_d) \cdot \vE_s(\vec{r}_s)
+    \frac{e^{- k \Delta }}{\Delta}
+}
+Scale the coordinates $x$ and $y$ by $a$ and $z$ by $H$ so that they are all unitless and run over $[0,1]$, 
+\eqa{
+    G &= m^3 a H^2 
+    \int_0^1 \diff{x_d} \int_0^1 \diff{y_d} \int_0^1 \diff{z_d} 
+    \int_0^1 \diff{x_s} \int_0^1 \diff{y_s} \int_0^1 \diff{z_s} 
+    \vE_d(\vec{r}_d) \cdot \vE_s(\vec{r}_s)
+    \frac{e^{- k a \delta }}{\delta} \\
+    \delta &= \sqrt{\lp x_d - x_s \rp^2
+    + \lp y_d - y_s \rp^2
+    + \lp \frac{H}{a} \lb 1 + z_d - z_s \rb + \frac{\tau}{a} \rp^2 }.
+}
+Now let's pick some cavity modes. 
+In these units the modes are for TM
+\eqa{
+    E^\tx{TM}_x &= \frac{ -\sqrt{8} \, k_z k_x}{\omega \sqrt{k_x^2 + k_y^2}}
+    \cos\lp \pi n_x x \rp  \sin\lp \pi n_y y \rp 
+    \sin\lp \pi n_z z \rp \\
+    E^\tx{TM}_y &= \frac{ -\sqrt{8} \, k_z k_y}{\omega \sqrt{k_x^2 + k_y^2}}
+    \sin\lp \pi n_x x \rp  \cos\lp \pi n_y y \rp 
+    \sin\lp \pi n_z z \rp \\
+    E^\tx{TM}_z &= \frac{ \sqrt{8} \, \sqrt{k_x^2 + k_y^2}}{\omega}
+    \sin\lp \pi n_x x \rp  \sin\lp \pi n_y y \rp 
+    \cos\lp \pi n_z z \rp
+}
+and TE 
+\eqa{
+    E^\tx{TE}_x &= \frac{ i \sqrt{8} \, k_y}{\sqrt{k_x^2 + k_y^2}}
+    \cos\lp \pi n_x x \rp  \sin\lp \pi n_y y \rp 
+    \sin\lp \pi n_z z \rp \\
+    E^\tx{TE}_y &= \frac{-i \sqrt{8} \, k_x}{\sqrt{k_x^2 + k_y^2}}
+    \sin\lp \pi n_x x \rp  \cos\lp \pi n_y y \rp 
+    \sin\lp \pi n_z z \rp \\
+    E^\tx{TE}_z &= 0. 
+}
+We know that we want $\tx{TM}_{110}$, but for thoroughness we can just as easily evaluate all the overlaps of the first few modes. 
+Lets write the prefactors entirely in terms of $n_i$, and $H/a$. 
+E.g., 
+\eqa{
+    \frac{ -\sqrt{8} \, k_z k_x}{\omega \sqrt{k_x^2 + k_y^2}} 
+    &= -\sqrt{8} \pfrac{\pi n_z}{H} \pfrac{\pi n_x}{a}
+    \frac{1}{
+    \sqrt{ \pfrac{\pi n_x}{a}^2 +  \pfrac{\pi n_y}{a}^2+\pfrac{\pi n_z}{H}^2}
+    \sqrt{ \pfrac{\pi n_x}{a}^2 +  \pfrac{\pi n_y}{a}^2}} \\
+    &= -\sqrt{8} \pfrac{n_z a}{H} n_x
+    \frac{1}
+    {\sqrt{ n_x^2 +  n_y^2 + \pfrac{a n_z}{H}^2} \sqrt{ n_x^2 +  n_y^2}}\\
+    &= \frac{-\sqrt{8} \, n_z n_x}
+    {\sqrt{ \pfrac{H}{a}^2 \lp n_x^2 +  n_y^2 \rp +n_z^2} 
+    \sqrt{ n_x^2 +  n_y^2}}.
+}
+The modes are 
+\eqa{
+    E^\tx{TM}_x &= 
+    \frac{-\sqrt{8} \, n_z n_x}
+    {\sqrt{ \pfrac{H}{a}^2 \lp n_x^2 +  n_y^2 \rp +n_z^2} 
+    \sqrt{ n_x^2 +  n_y^2}}
+    \cos\lp \pi n_x x \rp  \sin\lp \pi n_y y \rp 
+    \sin\lp \pi n_z z \rp \\
+    E^\tx{TM}_y &= -\frac{-\sqrt{8} \, n_z n_y}
+    {\sqrt{ \pfrac{H}{a}^2 \lp n_x^2 +  n_y^2 \rp +n_z^2} 
+    \sqrt{ n_x^2 +  n_y^2}}
+    \sin\lp \pi n_x x \rp  \cos\lp \pi n_y y \rp 
+    \sin\lp \pi n_z z \rp \\
+    E^\tx{TM}_z &= \sqrt{8}\, \pfrac{H}{a} \, 
+    \frac{ \sqrt{n_x^2 + n_y^2}}
+    {\sqrt{ \pfrac{H}{a}^2 \lp n_x^2 +  n_y^2 \rp +n_z^2}}
+    \sin\lp \pi n_x x \rp  \sin\lp \pi n_y y \rp 
+    \cos\lp \pi n_z z \rp
+}
+and 
+\eqa{
+    E^\tx{TE}_x &=  i \sqrt{8} \, \frac{n_y}{\sqrt{n_x^2 + n_y^2}}
+    \cos\lp \pi n_x x \rp  \sin\lp \pi n_y y \rp 
+    \sin\lp \pi n_z z \rp \\
+    E^\tx{TE}_y &= -i \sqrt{8} \, \frac{n_x}{\sqrt{n_x^2 + n_y^2}}
+    \sin\lp \pi n_x x \rp  \cos\lp \pi n_y y \rp 
+    \sin\lp \pi n_z z \rp \\
+    E^\tx{TE}_z &= 0. 
+}
+The normalization in these units is 
+\eqa{
+    \int \diffp{3}{x} \lvl E(\vec{x}) \rvl &= a^2 H \\
+    \Rightarrow \qq 
+    \int \diffp{3}{x'} \lvl E(\vec{x}') \rvl &= 1 
+}
+where $x'_i = x_i/L_i$. 
+{\color{red} Note: this normalization is off, there should be some extra factors of $\sqrt{2}$ when some of the $n_i=0$.
+The above was inadvertently derived assuming all $n_i \neq 0$.
+Having some $n_i$ vanish is a special case because of the integral
+\eqa{
+    \int_0^1 \diff{x} \sin^2 \lp \pi n x \rp = 
+    \begin{cases}
+      1 & n = 0 \\
+      \frac{1}{2} & n > 0 
+    \end{cases}
+}}
+
+\subsubsection{$\tx{TM}_{110}$}
+
+Let's evaluate the signal power fully for the $\tx{TM}_{110}$ modes. 
+In principle we can drive the source cavity up to the critical field of the material, $B_c \approx 0.1 \Tesla$. 
+We ought to write \Eq{eq:Psig} in term of the magnetic field at the surface of the cavity, not the more abstract scale $\mathcal{E}$. 
+For this mode the fields are 
+\eqa{
+    E_z &= 2 \sin\lp \pi x \rp  \sin\lp \pi y \rp \\
+    B_x &=  i \sqrt{2} \sin\lp \pi x \rp  \cos\lp \pi y \rp \\
+    B_y &= -i \sqrt{2} \cos\lp \pi x \rp  \sin\lp \pi y \rp 
+}
+thus the maximum surface magnetic field is $B_s = \sqrt{2} \mathcal{E}$. 
+So write
+\eqa{
+\la{eq:Psig}
+    \bar{P}_d 
+   &=  \frac{Q_d \e^4 \mA^2 a^2 B_s^2 }{64 \pi^2 \omega^3 H} 
+   \lvl G \rvl^2.
+}
+
+
+
+
+\section{Variations}
+
+\subsection{Field Equations}
+
+Now as a further check on \Eqs{eq:field-eq-F}{eq:field-eq-F'} we can also directly vary the Lagrangian in \Eq{eq:interaction-L}. 
+This yields 
+\eqa{
+    \Lag + \delta\Lag = 
+    - &\frac{1}{4} 
+    \lp  F_{\mu\nu} + \delta F_{\mu\nu} \rp 
+    \lp F^{\mu\nu} + \delta F^{\mu\nu} \rp 
+     +  \frac{\e}{2}   
+     \lp  F_{\mu\nu} + \delta F_{\mu\nu} \rp  
+     \lp  F'^{\mu\nu} + \delta F'^{\mu\nu} \rp \\
+     - &\frac{1}{4} 
+    \lp  F'_{\mu\nu} + \delta F'_{\mu\nu} \rp 
+    \lp F'^{\mu\nu} + \delta F'^{\mu\nu} \rp 
+     + \frac{1}{2} \mA^2 
+    \lp  A'_\mu + \delta A'_\mu \rp 
+    \lp A'^\mu + \delta A'^\mu \rp \\
+     -  &\lp  A_\mu + \delta A_\mu \rp  J_\tx{EM}^\mu. \\ 
+    \approx 
+    - &\frac{1}{4} 
+    \lp  F_{\mu\nu} F^{\mu\nu} +2 F^{\mu\nu} \delta F_{\mu\nu} \rp 
+    +  \frac{\e}{2}   
+     \lp  F_{\mu\nu} F'^{\mu\nu} + F'^{\mu\nu} \delta F_{\mu\nu} 
+     + F_{\mu\nu} \delta F'^{\mu\nu} \rp   \\
+    - &\frac{1}{4} 
+    \lp  F'_{\mu\nu} F'^{\mu\nu} +2 F'^{\mu\nu} \delta F'_{\mu\nu} \rp 
+     + \frac{1}{2} \mA^2 
+    \lp  A'_\mu A'^\mu + 2 A'^\mu \delta A'_\mu \rp 
+     -  \lp  A_\mu + \delta A_\mu \rp  J_\tx{EM}^\mu \\
+\Rightarrow \qq \delta\Lag =
+    - &\frac{1}{2}  F^{\mu\nu} \delta F_{\mu\nu} 
+    - \frac{1}{2} F'^{\mu\nu} \delta F'_{\mu\nu} 
+    +  \frac{\e}{2}   
+     \lp  F'^{\mu\nu} \delta F_{\mu\nu} +
+      F_{\mu\nu} \delta F'^{\mu\nu} \rp  
+     +  \mA^2 A'^\mu \delta A'_\mu 
+     -   J_\tx{EM}^\mu \delta A_\mu  \\
+     =- &\frac{1}{2} 
+    \lp  F^{\mu\nu} - \e F'^{\mu\nu} \rp 
+    \delta F_{\mu\nu} 
+    -   J_\tx{EM}^\mu \delta A_\mu  
+    - \frac{1}{2}
+     \lp  F'^{\mu\nu} - \e  F^{\mu\nu} \rp 
+     \delta F'_{\mu\nu} 
+     +  \mA^2 A'^\mu \delta A'_\mu .
+}
+Now relate $\delta F$ to $\delta A$, 
+\eqa{
+    F_{\mu\nu} &= \partial_\mu A_\nu - \partial_\nu A_\mu \\
+    F_{\mu\nu} + \delta F_{\mu\nu} &= 
+    \partial_\mu \lp  A_\nu + \delta A_\nu \rp - 
+    \partial_\nu \lp  A_\mu + \delta A_\mu \rp \\
+    \delta F_{\mu\nu} &= 
+    \partial_\mu \lp  \delta A_\nu \rp - 
+    \partial_\nu \lp  \delta A_\mu \rp
+}
+and we can integrate by parts 
+\eqa{
+    \lp  F^{\mu\nu} - \e F'^{\mu\nu} \rp 
+    \delta F_{\mu\nu} &= 
+    \lp  F^{\mu\nu} - \e F'^{\mu\nu} \rp 
+    \lp  
+    \partial_\mu \lp  \delta A_\nu \rp - 
+    \partial_\nu \lp  \delta A_\mu \rp \rp \\
+    &=
+    \lp  F^{\mu\nu} - \e F'^{\mu\nu} \rp 
+    \partial_\mu \lp  \delta A_\nu \rp 
+    - \lp  F^{\mu\nu} - \e F'^{\mu\nu} \rp 
+    \partial_\nu \lp  \delta A_\mu \rp  \\
+    &=
+    \lp  F^{\mu\nu} - \e F'^{\mu\nu} \rp 
+    \partial_\mu \lp  \delta A_\nu \rp 
+    + \lp  F^{\nu\mu} - \e F'^{\nu\mu} \rp 
+    \partial_\nu \lp  \delta A_\mu \rp  \\
+    &=
+    2 \lp F^{\mu\nu} - \e F'^{\mu\nu} \rp 
+    \partial_\mu \lp  \delta A_\nu \rp \\
+    &=
+    - 2 \lp  \partial_\mu F^{\mu\nu} - \e \partial_\mu F'^{\mu\nu} 
+    \rp \delta A_\nu + \lp \tx{boundary term}\rp \\
+\Rightarrow \qq    - \frac{1}{2} 
+    \lp  F^{\mu\nu} - \e F'^{\mu\nu} \rp 
+    \delta F_{\mu\nu} &= 
+     \lp \partial_\mu F^{\mu\nu} - \e \partial_\mu F'^{\mu\nu} 
+    \rp \delta A_\nu 
+}
+and so $\delta \Lag$ is 
+\eqa{
+\delta \Lag  &= \lp \partial_\mu F^{\mu\nu} - 
+     \e \partial_\mu F'^{\mu\nu} 
+    \rp \delta A_\nu 
+    -   J_\tx{EM}^\mu \delta A_\mu  
+    + \lp \partial_\mu F'^{\mu\nu} - 
+     \e \partial_\mu F^{\mu\nu} 
+    \rp \delta A'_\nu 
+     +  \mA^2 A'^\mu \delta A'_\mu  \\ 
+    &= \lp \partial_\mu F^{\mu\nu} - 
+     \e \partial_\mu F'^{\mu\nu} 
+    -  J_\tx{EM}^\nu \rp \delta A_\nu  
+    + \lp \partial_\mu F'^{\mu\nu} - 
+     \e \partial_\mu F^{\mu\nu} 
+     +  \mA^2 A'^\nu \rp \delta A'_\nu.
+}
+The field equations are 
+\eqa{
+\la{eq:field-eq-F-vary}
+\partial_\mu F^{\mu\nu} - 
+     \e \partial_\mu F'^{\mu\nu} 
+    -   J_\tx{EM}^\nu &= 0 \\
+\la{eq:field-eq-F'-vary}
+    \partial_\mu F'^{\mu\nu} - 
+     \e \partial_\mu F^{\mu\nu} 
+     +  \mA^2 A'^\nu &= 0.
+}
+This agrees with \Eqs{eq:field-eq-F}{eq:field-eq-F'}. 
+
+\subsection{Lorentz Force}
+
+This Lorentz force must follow from the $A J$ coupling and the classical particle kinetic term,
+\eqa{
+    S = \int \diff{t} \lb - m \sqrt{1 - \dot{\vec{r}}^2}
+    + \int \diffp{3}{x} A_\mu J^\mu \rb.
+}
+Here $\vec{r}(t)$ is the trajectory of the particle and $J$ is the current due to that trajectory. 
+Taking the particle to have charge $e$,
+\eqa{
+    J^\mu &= e \delta^{(3)}\lb\vec{x} - \vec{r}(t)\rb
+    \lp  1, \, \dot{\vec{r}}(t) \rp .
+}
+The EM current term in the action is  
+\eqa{
+S &= \int \diff{t} \diffp{3}{x} A_\mu 
+\cdot \lp  1, \, \dot{\vec{r}}(t) \rp  \, 
+  e \delta^{(3)}\lb\vec{x} - \vec{r}(t)\rb  \\
+&= \int \diff{t} e A_\mu(r) \cdot \lp  1, \, \dot{\vec{r}}(t) \rp \\
+&= \int \diff{t} e A_0(r) - e A_i(r) \dot{r}_i 
+}
+And so we have the classical action of a charge $e$ in a background field,
+\eqa{
+S &= \int \diff{t} \lb - m \sqrt{1 - \dot{\vec{r}}^2}
+ + e A_0(r) - e A_i(r) \dot{r}_i  \rb
+}
+We now vary the trajectory: $\vec{r}(t) \rightarrow \vec{r}(t) + \delta \vec{r}(t)$. 
+\eqa{
+ \Lag &=  - m \sqrt{1 - 
+  \partial_t (r_i + \delta r_i) \partial_t (r^i + \delta r^i)}
+ + e A_0(r + \delta r) - e A_i(r + \delta r) \partial_t (r^i + \delta r^i) 
+}
+
+\bibliography{notes}
+
+\end{document}
