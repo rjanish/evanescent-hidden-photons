@@ -69,11 +69,12 @@ double Ei_cylinder_TM010(double r, double phi, double z,
             return 0.0;
         case phi_hat:
             return 0.0;
-        case z_hat:
+        case z_hat:{
             const double x01 = gsl_sf_bessel_zero_J0(1);
             return -gsl_sf_bessel_J0(x01*r/R);
+            }
         }
-        abort()
+        abort();
     }
 
 
@@ -136,15 +137,16 @@ double Ei_cylinder_TE011(double r, double phi, double z,
         switch (component) {
         case r_hat:
             return 0.0;
-        case phi_hat:
+        case phi_hat:{
             const double omega = angular_frequency_TE011(R, L);
             const double xprime01 = gsl_sf_bessel_zero_J1(1);
             return (omega*R/xprime01) *
                    gsl_sf_bessel_J1(xprime01*r/R) *
                    gsl_sf_sin(M_PI*z/L);
                    // I have dropped a factor of -i here, I think that is fine
+            }
         case z_hat:
             return 0.0;
         }
-        abort()
+        abort();
     }

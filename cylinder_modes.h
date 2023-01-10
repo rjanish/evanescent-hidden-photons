@@ -29,9 +29,10 @@ E field mode in a cylinder cavity, evaluated by cylinder coordinates
 with the origin at the center of the cavity endcap.
 */
 double Ei_cylinder_TM010(double, double, double,
-                         double, double, CylindricalUnitVector)
+                         double, double, CylindricalUnitVector);
+
 double Ei_cylinder_TE011(double, double, double,
-                         double, double, CylindricalUnitVector)
+                         double, double, CylindricalUnitVector);
 
 
 #endif

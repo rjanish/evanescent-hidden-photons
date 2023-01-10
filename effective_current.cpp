@@ -118,10 +118,10 @@ EffectiveCurrent::EffectiveCurrent(double R_init, double L_init,
     : mode(R_init, L_init, Ki_emitter_init, omega_func_init),
       atol(atol_init), rtol(rtol_init), method(method_init) {}
 
-void EffectiveCurrent::operator () (double r0, double phi0, double z0,
-                                    double m, PropagatorType re_or_im,
-                                    CylindricalUnitVector component,
-                                    double &result, double &error)
+void EffectiveCurrent::operator()(double r0, double phi0, double z0,
+                                  double m, PropagatorType re_or_im,
+                                  CylindricalUnitVector component,
+                                  double &result, double &error)
 {
     if (r0 < mode.R && 0 < z0 && z0 < mode.L){
         result = NAN;
@@ -151,4 +151,6 @@ void EffectiveCurrent::operator () (double r0, double phi0, double z0,
     }
     integrate_over_cylinder<PropagatedSurfaceCurrent>(&mode, atol, rtol,
                                                       method, result, error);
+    result *= m*m;
+    error *= m*m;
 }

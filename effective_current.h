@@ -28,7 +28,6 @@ class PropagatedSurfaceCurrent {
 public:
     double R;
     double L;
-    char mode_name[6];
     VectorFieldOnCylinder Ki_emitter;
     CylinderFrequency omega_func;
     double r0, phi0, z0;

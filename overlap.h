@@ -7,28 +7,35 @@
 
 
 typedef double (*VectorFieldInCylinder) (double, double, double, double,
-                                         double, CylindricalUnitVector));
+                                         double, CylindricalUnitVector);
 
-class DetectionCavity {
+
+class OverlapIntegrand{
 public:
-    double R;
-    double L;
-    double seperation;
-    char mode_name[6];
-    VectorFieldInCylinder Ei_mode;
-    CylinderFrequency omega_func;
-    DetectionCavity()
+    EffectiveCurrent j_eff;
+    double Rd, Ld, seperation;
+    VectorFieldInCylinder Edetect;
+    double mass;
+    PropagatorType re_or_im;
+    double atol, rtol;
+    gsl_integration_method method;
+    OverlapIntegrand(double, double, VectorFieldOnCylinder,
+                     CylinderFrequency, double, double, double,
+                     VectorFieldInCylinder, PropagatorType, double,
+                     double, double, gsl_integration_method);
+    double operator() (double, double);
 };
 
 
 class Overlap {
 public:
-    EffectiveCurrent j_eff;
-    DetectionCavity detect_mode;
+    OverlapIntegrand integrand;
     double atol, rtol;
     gsl_integration_method method;
-    Overlap();
-    void operator () (double, double &, double &);
+    Overlap(double, double, VectorFieldOnCylinder, CylinderFrequency,
+            double, double, double, VectorFieldInCylinder,
+            double, double, gsl_integration_method);
+    double operator() (double);
 };
 
 #endif
