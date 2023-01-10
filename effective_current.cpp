@@ -29,8 +29,8 @@ double propagator(double r, double phi, double z,
                   double r0, double phi0, double z0,
                   double q, PropagatorType prop_type)
 {
-    double d = sqrt(r*r + r0*r0 - 2.0*r*r0*gsl_sf_cos(phi - phi0) + 
-                (z - z0)*(z - z0)); // cylindrical coordinates distance    
+    double d = sqrt(r*r + r0*r0 - 2.0*r*r0*gsl_sf_cos(phi - phi0) +
+                (z - z0)*(z - z0)); // cylindrical coordinates distance
     double arg = q*d; // q must be positive
     switch (prop_type){
     case real:
@@ -38,7 +38,7 @@ double propagator(double r, double phi, double z,
     case imaginary:
         return gsl_sf_sin(arg)/d;
     case evanescent:
-        if (arg < 100.0){  
+        if (arg < 100.0){
             return gsl_sf_exp(-arg)/d;
         }
         else { // avoid underflow
@@ -49,28 +49,29 @@ double propagator(double r, double phi, double z,
 }
 
 
-CylinderMode::CylinderMode(double R_init, double L_init,
+PropagatedSurfaceCurrent::PropagatedSurfaceCurrent(
+                 double R_init, double L_init,
                  VectorFieldOnCylinder Ki_emitter_init,
-                 CylinderFrequency omega_func_init) : 
-    R(R_init), L(L_init), 
-    Ki_emitter(Ki_emitter_init), 
+                 CylinderFrequency omega_func_init) :
+    R(R_init), L(L_init),
+    Ki_emitter(Ki_emitter_init),
     omega_func(omega_func_init) {}
 
-/* 
-Surface current in cylindrical components relative to the 
+/*
+Surface current in cylindrical components relative to the
 detection point (which is set in the attributes)
 */
-double CylinderMode::Ki_detector(double x1, double x2, double phi)
+double PropagatedSurfaceCurrent::Ki_detector(double x1, double x2, double phi)
 {
     switch (component) {
     case r_hat:
         return Ki_emitter(x1, x2, R, L, surface, r_hat)*
-                gsl_sf_cos(phi - phi0) + 
+                gsl_sf_cos(phi - phi0) +
                Ki_emitter(x1, x2, R, L, surface, phi_hat)*
-                gsl_sf_sin(phi - phi0); 
+                gsl_sf_sin(phi - phi0);
     case phi_hat:
         return -Ki_emitter(x1, x2, R, L, surface, r_hat)*
-                  gsl_sf_sin(phi - phi0) + 
+                  gsl_sf_sin(phi - phi0) +
                 Ki_emitter(x1, x2, R, L, surface, phi_hat)*
                   gsl_sf_cos(phi - phi0);
     case z_hat:
@@ -79,7 +80,7 @@ double CylinderMode::Ki_detector(double x1, double x2, double phi)
     abort();
 }
 
-double CylinderMode::operator () (double x1, double x2)
+double PropagatedSurfaceCurrent::operator () (double x1, double x2)
 {
     double r, phi, z;
     switch (surface) {
@@ -113,14 +114,14 @@ EffectiveCurrent::EffectiveCurrent(double R_init, double L_init,
                                    VectorFieldOnCylinder Ki_emitter_init,
                                    CylinderFrequency omega_func_init,
                                    double atol_init, double rtol_init,
-                                   gsl_integration_method method_init) 
+                                   gsl_integration_method method_init)
     : mode(R_init, L_init, Ki_emitter_init, omega_func_init),
       atol(atol_init), rtol(rtol_init), method(method_init) {}
 
-void EffectiveCurrent::operator () (double r0, double phi0, double z0, 
-                                    double m, PropagatorType re_or_im,
-                                    CylindricalUnitVector component,
-                                    double &result, double &error)
+void EffectiveCurrent::operator()(double r0, double phi0, double z0,
+                                  double m, PropagatorType re_or_im,
+                                  CylindricalUnitVector component,
+                                  double &result, double &error)
 {
     if (r0 < mode.R && 0 < z0 && z0 < mode.L){
         result = NAN;
@@ -144,10 +145,12 @@ void EffectiveCurrent::operator () (double r0, double phi0, double z0,
             result = 0.0;
             error = 0.0;
             return;
-        } 
+        }
     } else {
         mode.prop_type = re_or_im;
     }
-    integrate_over_cylinder<CylinderMode>(&mode, atol, rtol, 
-                                          method, result, error);
+    integrate_over_cylinder<PropagatedSurfaceCurrent>(&mode, atol, rtol,
+                                                      method, result, error);
+    result *= m*m;
+    error *= m*m;
 }

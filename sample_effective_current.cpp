@@ -17,7 +17,7 @@ void linspace(double start, double end, size_t N, double samples[])
         samples[0] = start;
         return;
     } else if (N > 1){
-        double step = (end - start)/(N - 1); 
+        double step = (end - start)/(N - 1);
         for (size_t index = 0; index < N; ++index){
             samples[index] = start + step*index;
         }
@@ -41,10 +41,10 @@ int main(int argc, char* argv[]){
     // process each param file
     for (int file_number = 1; file_number < argc; ++file_number){
         // read parameter file
-          // z here is in 'detector coordinates', i.e. z measured 
+          // z here is in 'detector coordinates', i.e. z measured
           // from the top of the source cylinder: z_detector = L + z_source
-          // phi in the param file should be given in units of 2pi, but 
-          // in the output file it will be given in radians 
+          // phi in the param file should be given in units of 2pi, but
+          // in the output file it will be given in radians
         std::string param_filename = argv[file_number];
         std::ifstream param_file(param_filename);
         std::map<std::string, std::string> input_params;
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]){
         auto mass    = std::stod(input_params["mass"]);
         std::cout << fmt::format("{}...", param_filename) << std::endl;
 
-        // construct sampling grid 
+        // construct sampling grid
         double r_grid[r_N];
         linspace(r_min, r_max, r_N, r_grid);
         double phi_grid[phi_N];
@@ -87,7 +87,7 @@ int main(int argc, char* argv[]){
             std::cerr << fmt::format("invalid mode: {}\n", mode_name);
             abort();
         }
-        EffectiveCurrent J(radius, length, Ki_emitter, omega_func, 
+        EffectiveCurrent J(radius, length, Ki_emitter, omega_func,
                            atol, rtol, method);
 
         // prep output file
@@ -97,13 +97,13 @@ int main(int argc, char* argv[]){
         output_file << fmt::format("r  phi  z  "
                                    "Re[j_r]  error_Re[j_r]  "
                                    "Im[j_r]  error_Im[j_r]  "
-                                   "Re[j_phi]  error_Re[j_phi]  "  
+                                   "Re[j_phi]  error_Re[j_phi]  "
                                    "Im[j_phi]  error_Im[j_phi]  "
                                    "Re[j_z]  error_Re[j_z]  "
                                    "Im[j_z]  error_Im[j_z]  \n{}\n\n",
                                    std::string(78, '-'));
-        
-        // sample effective current 
+
+        // sample effective current
         double result, error;
         for (auto &r : r_grid){
             for (auto &phi : phi_grid){
@@ -111,10 +111,10 @@ int main(int argc, char* argv[]){
                     output_file << fmt::format("{}  {}  {}  ", r, phi, z);
                     for(auto &spatial_component : directions){
                         for(auto &complex_part : re_or_im){
-                            J(r, phi, length + z, mass, 
-                              complex_part, spatial_component, 
+                            J(r, phi, length + z, mass,
+                              complex_part, spatial_component,
                               result, error);
-                            output_file << fmt::format("{}  {}  ", 
+                            output_file << fmt::format("{}  {}  ",
                                                        result, error);
                         }
                     }

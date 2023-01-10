@@ -16,7 +16,7 @@ double wavenumber(double omega, double m);
 
 enum PropagatorType {real, imaginary, evanescent,};
 
-double propagator(double, double, double, double, double, 
+double propagator(double, double, double, double, double,
                   double, double, PropagatorType);
 
 typedef double (*VectorFieldOnCylinder) (double, double, double, double,
@@ -24,11 +24,10 @@ typedef double (*VectorFieldOnCylinder) (double, double, double, double,
 
 typedef double (*CylinderFrequency) (double, double);
 
-class CylinderMode {
+class PropagatedSurfaceCurrent {
 public:
     double R;
     double L;
-    char mode_name[6];
     VectorFieldOnCylinder Ki_emitter;
     CylinderFrequency omega_func;
     double r0, phi0, z0;
@@ -36,17 +35,19 @@ public:
     Surface surface;
     PropagatorType prop_type;
     CylindricalUnitVector component;
-    CylinderMode(double, double, VectorFieldOnCylinder, CylinderFrequency); 
+    PropagatedSurfaceCurrent(double, double,
+                             VectorFieldOnCylinder,
+                             CylinderFrequency);
     double Ki_detector(double, double, double);
     double operator () (double, double);
 };
 
 class EffectiveCurrent {
 public:
-    CylinderMode mode; 
+    PropagatedSurfaceCurrent mode;
     double atol, rtol;
     gsl_integration_method method;
-    EffectiveCurrent(double, double, VectorFieldOnCylinder, 
+    EffectiveCurrent(double, double, VectorFieldOnCylinder,
                      CylinderFrequency, double, double,
                      gsl_integration_method);
     void operator () (double, double, double, double, PropagatorType,
