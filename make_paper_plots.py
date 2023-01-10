@@ -106,10 +106,9 @@ def make_mode_slice_plots(output_files, prefix=""):
 
 if __name__ == "__main__":
 
-    # paper_plot_runs = ["output-plot-TM010-m10.dat",
-    #                    "output-plot-TE011-m10.dat"]
-    paper_plot_runs = ["output-plot-old-TM010-m10.dat"]
-    make_mode_slice_plots(paper_plot_runs, prefix="output-plot-old-")
+    paper_plot_runs = ["output-plot-TM010-m10.dat",
+                       "output-plot-TE011-m10.dat"]
+    make_mode_slice_plots(paper_plot_runs, prefix="output-plot-")
 
 
 
