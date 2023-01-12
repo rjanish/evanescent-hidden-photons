@@ -22,12 +22,13 @@ double Ki_cylinder_TM010(double x1, double x2, double R, double L,
                          Surface surface, CylindricalUnitVector component)
 {
     const double x01 = gsl_sf_bessel_zero_J0(1);
+    const double scale_inv = sqrt(M_PI*L)*R*gsl_sf_bessel_J1(x01);
     switch (surface) {
     case top:
         // x1 is r, x2 is phi
         switch (component) {
         case r_hat:
-            return gsl_sf_bessel_J1(x01*x1/R);
+            return -gsl_sf_bessel_J1(x01*x1/R)/scale_inv;
         case phi_hat:
             return 0.0;
         case z_hat:
@@ -38,7 +39,7 @@ double Ki_cylinder_TM010(double x1, double x2, double R, double L,
         // x1 is r, x2 is phi
         switch (component) {
         case r_hat:
-            return -gsl_sf_bessel_J1(x01*x1/R);
+            return gsl_sf_bessel_J1(x01*x1/R)/scale_inv;
         case phi_hat:
             return 0.0;
         case z_hat:
@@ -53,7 +54,7 @@ double Ki_cylinder_TM010(double x1, double x2, double R, double L,
         case phi_hat:
             return 0.0;
         case z_hat:
-            return -gsl_sf_bessel_J1(x01);
+            return gsl_sf_bessel_J1(x01)/scale_inv;
         }
         abort();
     }
@@ -71,7 +72,8 @@ double Ei_cylinder_TM010(double r, double phi, double z,
             return 0.0;
         case z_hat:{
             const double x01 = gsl_sf_bessel_zero_J0(1);
-            return -gsl_sf_bessel_J0(x01*r/R);
+            const double scale_inv = sqrt(M_PI*L)*R*gsl_sf_bessel_J1(x01);
+            return gsl_sf_bessel_J0(x01*r/R)/scale_inv;
             }
         }
         abort();
@@ -98,8 +100,11 @@ double Ki_cylinder_TE011(double x1, double x2, double R, double L,
         switch (component) {
         case r_hat:
             return 0.0;
-        case phi_hat:
-            return M_PI*R*gsl_sf_bessel_J1(xprime01*x1/R)/(xprime01*L);
+        case phi_hat:{
+            const double scale = sqrt(2.0*M_PI/L) /
+                (L*R*gsl_sf_bessel_J0(xprime01)*angular_frequency_TE011(R, L));
+            return scale*M_PI*R*gsl_sf_bessel_J1(xprime01*x1/R)/(xprime01*L);
+        }
         case z_hat:
             return 0.0;
         }
@@ -109,8 +114,11 @@ double Ki_cylinder_TE011(double x1, double x2, double R, double L,
         switch (component) {
         case r_hat:
             return 0.0;
-        case phi_hat:
-            return M_PI*R*gsl_sf_bessel_J1(xprime01*x1/R)/(xprime01*L);
+        case phi_hat:{
+            const double scale = sqrt(2.0*M_PI/L) /
+                (L*R*gsl_sf_bessel_J0(xprime01)*angular_frequency_TE011(R, L));
+            return scale*gsl_sf_bessel_J1(xprime01*x1/R);
+        }
         case z_hat:
             return 0.0;
         }
@@ -120,8 +128,11 @@ double Ki_cylinder_TE011(double x1, double x2, double R, double L,
         switch (component) {
         case r_hat:
             return 0.0;
-        case phi_hat:
-            return -gsl_sf_bessel_J0(xprime01)*gsl_sf_sin(M_PI*x2/L);
+        case phi_hat:{
+            const double scale = xprime01 * sqrt(2.0/(M_PI*L)) /
+                (gsl_sf_bessel_J0(xprime01)*R*R*angular_frequency_TE011(R, L));
+            return -scale*gsl_sf_bessel_J0(xprime01)*gsl_sf_sin(M_PI*x2/L);
+        }
         case z_hat:
             return 0.0;
         }
@@ -138,11 +149,9 @@ double Ei_cylinder_TE011(double r, double phi, double z,
         case r_hat:
             return 0.0;
         case phi_hat:{
-            const double omega = angular_frequency_TE011(R, L);
             const double xprime01 = gsl_sf_bessel_zero_J1(1);
-            return (omega*R/xprime01) *
-                   gsl_sf_bessel_J1(xprime01*r/R) *
-                   gsl_sf_sin(M_PI*z/L);
+            const double scale = sqrt(2/(M_PI*L))/(R*gsl_sf_bessel_J0(xprime01))
+            return scale*gsl_sf_bessel_J1(xprime01*r/R)*gsl_sf_sin(M_PI*z/L);
                    // I have dropped a factor of -i here, I think that is fine
             }
         case z_hat:
