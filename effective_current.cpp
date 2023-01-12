@@ -151,6 +151,6 @@ void EffectiveCurrent::operator()(double r0, double phi0, double z0,
     }
     integrate_over_cylinder<PropagatedSurfaceCurrent>(&mode, atol, rtol,
                                                       method, result, error);
-    result *= m*m;
-    error *= m*m;
+    result *= -m*m/(4*M_PI);
+    error *= -m*m/(4*M_PI);
 }

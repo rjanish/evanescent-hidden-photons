@@ -90,6 +90,7 @@ int main(int argc, char* argv[]){
         EffectiveCurrent J(radius, length, Ki_emitter, omega_func,
                            atol, rtol, method);
 
+
         // prep output file
         std::ofstream output_file(fmt::format("output-{}", param_filename));
         write_map(output_file, input_params);

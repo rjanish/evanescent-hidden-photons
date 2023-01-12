@@ -17,33 +17,34 @@ def make_mode_slice_plots(output_files, prefix=""):
     to be used for comparison in paper
     """
     out = ec.read_effective_current_output(output_files, prefix)
+    fig, [left, right] = plt.subplots(1,2)
 
     # color plot of |j_eff| for TM010
     run = "TM010-m10"
     xs = out[run]["x"][:, 0, :]
     zs = out[run]["z"][:, 0, :]
-    fig, ax = plt.subplots()
     j = out[run]["jtotal"][:, 0, :]
     abs_max = np.abs(j[np.isfinite(j)]).max()
-    cplot = ax.pcolor(zs, xs, j/abs_max, cmap="Reds", vmin=0, vmax=1)
-    ax.set_aspect("equal")
-    divider = make_axes_locatable(ax)
-    cax = divider.append_axes("right", size="5%", pad=0.05)
-    fig.colorbar(cplot, cax=cax)
-    ax.set_title("Effective Current")
+    cplot = left.pcolor(zs, xs, j/abs_max, cmap="Reds", vmin=0, vmax=1)
+    left.set_aspect("equal")
+    divider = make_axes_locatable(left)
+    # cax = divider.append_axes("right", size="5%", pad=0.05)
+    # fig.colorbar(cplot, cax=cax)
+    left.set_title("TM010 Source")
 
     # j_eff stream lines for TM010
     lw = 0.9
-    starts = [[0.025, 0.8],
-          [-0.4, 1.05],
-          [0.05, 1],
+    starts = [[0.06, 0.8],
+          # [-0.4, 1.06],
+          # [0.05, 1],
           [0.15, 1],
-          [0.25, 1],
+          # [0.25, 1],
           [0.35, 1],
-          [ -0.2, 1.49],
+          # [ -0.2, 1.49],
           [0.2, 1.49],
-          [0.4, 1.49]]
-    stream = ax.streamplot(
+          # [0.4, 1.49],
+          ]
+    stream = left.streamplot(
               out[run]["z"][0, 0, :], out[run]["x"][:, 0, 0],
               out[run]["re_jz"][:, 0, :],
               out[run]["re_jr"][:, 0, :],
@@ -58,7 +59,7 @@ def make_mode_slice_plots(output_files, prefix=""):
     yi = np.linspace(0.0, 1, Ni)
     # X, Y = np.meshgrid(xi, yi)
     # E_norm = Ez_TM010(Y)/np.max(Ez_TM010(Y))
-    stream = ax.streamplot(
+    stream = left.streamplot(
                   xi, yi, np.ones((Ni, Ni)), np.zeros((Ni, Ni)), #np.zeros(E_norm.shape),
                   broken_streamlines=False,
                   color="navy", linewidth=lw, arrowsize=2,
@@ -68,40 +69,70 @@ def make_mode_slice_plots(output_files, prefix=""):
                                 [-0.02, 0.3],
                                 [-0.02, 0.6],
                                 [-0.02, 0.9]])
-    ax.text(-0.4, 0.35, r'$\displaystyle \vec{E}_\textrm{source} $',
+    left.text(-0.4, 0.4, r'$\displaystyle \vec{E}_\textrm{source} $',
             color='navy', size=14)
+    left.text(-0.2, 1.25, r'$\displaystyle \vec{j}_\textrm{eff} $',
+            color='maroon', size=14)
     # circ_l, circ_r = -0.5*2/7, -0.5*5/7
     # circ_x = [circ_l]*3 + [circ_r]*3
     # circ_y = [0.15*1.5, 0.45, 0.75]*2
     # c_circ = 'darkgreen'
     # for xp, yp in zip(circ_x, circ_y):
-    #     ax.scatter([xp], [yp], marker='x', color=c_circ,
+    #     left.scatter([xp], [yp], marker='x', color=c_circ,
     #                s=6*(yp/0.15)**2, linewidth=2*yp)
-    #     ax.add_patch(plt.Circle((xp, yp), 0.08*yp, color=c_circ,
+    #     left.add_patch(plt.Circle((xp, yp), 0.08*yp, color=c_circ,
     #                             fill=False, linewidth=2*yp))
     # cavity boundary
-    ax.plot([-0.5, 0, 0], [1, 1, 0], marker='',
+    left.plot([-0.5, 0, 0], [1, 1, 0], marker='',
+        linestyle='-', color='black',
+        linewidth=2)
+    left.set_xlabel(r'$z/R$', size=12)
+    left.set_ylabel(r'$r/R$', size=12)
+
+
+    # color plot of j_eff_phi for TE011
+    run = "TE011-m10"
+    xs = out[run]["x"][:, 0, :]
+    zs = out[run]["z"][:, 0, :]
+    j = out[run]["re_jphi"][:, 0, :]
+    abs_max = np.abs(j[np.isfinite(j)]).max()
+    cplot = right.pcolor(zs, xs, j/abs_max, cmap="Reds", vmin=0, vmax=1)
+    j_cir_in = [[-0.5*1/4,  1.5*1/8],
+                [-0.5*1/4,  1.5*3/8],
+                [-0.5*3/4,  1.5*1/8],
+                [-0.5*3/4,  1.5*3/8]]
+    for xp, yp in j_cir_in:
+        right.scatter([xp], [yp], marker='x', color="navy", s=80, linewidth=lw)
+        right.add_patch(plt.Circle((xp, yp), 0.05, color="navy",
+                                fill=False, linewidth=lw))
+    j_circ_out = [[ 0.25,  1.5*1/8],
+                  [ 0.25,  1.5*3/8],
+                  [ 0.25,  1.5*5/8],
+                  [ 0.25,  1.5*7/8],
+                  [-0.25,  1.5*7/8]]
+    for xp, yp in j_circ_out:
+        right.scatter([xp], [yp], marker='x', color="maroon", s=80, linewidth=lw)
+        right.add_patch(plt.Circle((xp, yp), 0.05, color="maroon",
+                                fill=False, linewidth=lw))
+    right.text(-0.4, 0.7, r'$\displaystyle \vec{E}_\textrm{source} $',
+            color='navy', size=14)
+    right.text(-0.175, 1.2, r'$\displaystyle \vec{j}_\textrm{eff} $',
+            color='maroon', size=14)
+    right.set_aspect("equal")
+    # divider = make_axes_locatable(right)
+    # cax = divider.append_axes("right", size="5%", pad=0.05)
+    # fig.colorbar(cplot)
+    right.set_title("TE011 Source")
+    right.set_yticks([])
+    right.set_yticks([])
+    right.set_xlabel(r'$z/R$', size=12)
+    # cavity boundary
+    right.plot([-0.5, 0, 0], [1, 1, 0], marker='',
         linestyle='-', color='black',
         linewidth=2)
 
-    fig.savefig("{}.png".format(run), dpi=160)
+    fig.savefig("j_eff-slice.png", dpi=160)
     plt.close(fig)
-
-    # # color plot of j_eff_phi for TE011
-    # run = "TE011-m10"
-    # xs = out[run]["x"][:, 0, :]
-    # zs = out[run]["z"][:, 0, :]
-    # fig, ax = plt.subplots()
-    # j = out[run]["re_jphi"][:, 0, :]
-    # abs_max = np.abs(j[np.isfinite(j)]).max()
-    # cplot = ax.pcolor(zs, xs, j/abs_max, cmap="Reds", vmin=0, vmax=1)
-    # ax.set_aspect("equal")
-    # divider = make_axes_locatable(ax)
-    # cax = divider.append_axes("right", size="5%", pad=0.05)
-    # fig.colorbar(cplot, cax=cax)
-    # ax.set_title("Effective current generated by TE011 source")
-    # fig.savefig("{}.png".format(run), dpi=160)
-    # plt.close(fig)
 
 
 if __name__ == "__main__":
