@@ -150,7 +150,8 @@ double Ei_cylinder_TE011(double r, double phi, double z,
             return 0.0;
         case phi_hat:{
             const double xprime01 = gsl_sf_bessel_zero_J1(1);
-            const double scale = sqrt(2/(M_PI*L))/(R*gsl_sf_bessel_J0(xprime01))
+            const double scale =
+                sqrt(2/(M_PI*L))/(R*gsl_sf_bessel_J0(xprime01));
             return scale*gsl_sf_bessel_J1(xprime01*r/R)*gsl_sf_sin(M_PI*z/L);
                    // I have dropped a factor of -i here, I think that is fine
             }
