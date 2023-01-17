@@ -34,7 +34,7 @@ int main(int argc, char* argv[]){
     // fixed parameters
     const gsl_integration_method method = adaptive_singular;
     gsl_set_error_handler_off();
-    const size_t num_input_params = 15;
+    const size_t num_input_params = 18;
     const CylindricalUnitVector directions[3] = {r_hat, phi_hat, z_hat};
     const PropagatorType re_or_im[2] = {real, imaginary};
 
@@ -50,29 +50,24 @@ int main(int argc, char* argv[]){
         std::map<std::string, std::string> input_params;
         read_param_entries(param_file, input_params, num_input_params);
         std::string mode_name = input_params["mode"];
+        auto m_N     = std::stoul(input_params["m_N"]);
+        auto m_start   = std::stod(input_params["m_start"]);
+        auto m_end   = std::stod(input_params["m_end"]);
         auto r_N     = std::stoul(input_params["r_N"]);
-        auto r_min   = std::stod(input_params["r_min"]);
-        auto r_max   = std::stod(input_params["r_max"]);
+        auto r_start   = std::stod(input_params["r_start"]);
+        auto r_end   = std::stod(input_params["r_end"]);
         auto phi_N   = std::stoul(input_params["phi_N"]);
-        auto phi_min = std::stod(input_params["phi_min"])*2*M_PI;
-        auto phi_max = std::stod(input_params["phi_max"])*2*M_PI;
+        auto phi_start = std::stod(input_params["phi_start"])*2*M_PI;
+        auto phi_end = std::stod(input_params["phi_end"])*2*M_PI;
         auto z_N     = std::stoul(input_params["z_N"]);
-        auto z_min   = std::stod(input_params["z_min"]);
-        auto z_max   = std::stod(input_params["z_max"]);
+        auto z_start   = std::stod(input_params["z_start"]);
+        auto z_end   = std::stod(input_params["z_end"]);
         auto radius  = std::stod(input_params["radius"]);
         auto length  = std::stod(input_params["length"]);
         auto atol    = std::stod(input_params["atol"]);
         auto rtol    = std::stod(input_params["rtol"]);
         auto mass    = std::stod(input_params["mass"]);
         std::cout << fmt::format("{}...", param_filename) << std::endl;
-
-        // construct sampling grid
-        double r_grid[r_N];
-        linspace(r_min, r_max, r_N, r_grid);
-        double phi_grid[phi_N];
-        linspace(phi_min, phi_max, phi_N, phi_grid);
-        double z_grid[z_N];
-        linspace(z_min, z_max, z_N, z_grid);
 
         // construct effective current functor
         VectorFieldOnCylinder Ki_emitter;
@@ -90,36 +85,42 @@ int main(int argc, char* argv[]){
         EffectiveCurrent J(radius, length, Ki_emitter, omega_func,
                            atol, rtol, method);
 
-
         // prep output file
         std::ofstream output_file(fmt::format("output-{}", param_filename));
         write_map(output_file, input_params);
         output_file << '\n';
-        output_file << fmt::format("r  phi  z  "
-                                   "Re[j_r]  error_Re[j_r]  "
-                                   "Im[j_r]  error_Im[j_r]  "
-                                   "Re[j_phi]  error_Re[j_phi]  "
-                                   "Im[j_phi]  error_Im[j_phi]  "
-                                   "Re[j_z]  error_Re[j_z]  "
-                                   "Im[j_z]  error_Im[j_z]  \n{}\n\n",
+        output_file << fmt::format("m    r    phi    z    "
+                                   "Re[j_r]    error_Re[j_r]    "
+                                   "Im[j_r]    error_Im[j_r]    "
+                                   "Re[j_phi]    error_Re[j_phi]    "
+                                   "Im[j_phi]    error_Im[j_phi]    "
+                                   "Re[j_z]    error_Re[j_z]    "
+                                   "Im[j_z]    error_Im[j_z]  \n{}\n\n",
                                    std::string(78, '-'));
 
         // sample effective current
         double result, error;
-        for (auto &r : r_grid){
-            for (auto &phi : phi_grid){
-                for (auto &z : z_grid){
-                    output_file << fmt::format("{}  {}  {}  ", r, phi, z);
-                    for(auto &spatial_component : directions){
-                        for(auto &complex_part : re_or_im){
-                            J(r, phi, length + z, mass,
-                              complex_part, spatial_component,
-                              result, error);
-                            output_file << fmt::format("{}  {}  ",
-                                                       result, error);
+        for (size_t i_m=0; i_m < m_N; ++i_m){
+            double m = log_step(m_start, m_end, m_N, i_m);
+            for (size_t i_r=0; i_r < r_N; ++i_r){
+                double r = linear_step(r_start, r_end, r_N, i_r);
+                for (size_t i_phi=0; i_phi < phi_N; ++i_phi){
+                    double phi = linear_step(phi_start, phi_end, phi_N, i_phi);
+                    for (size_t i_z=0; i_z < z_N; ++i_z){
+                        double z = linear_step(z_start, z_end, z_N, i_z);
+                        output_file << fmt::format("{}  {}  {}  {}  ",
+                                                   m, r, phi, z);
+                        for(auto &spatial_component : directions){
+                            for(auto &complex_part : re_or_im){
+                                J(r, phi, length + z, mass,
+                                  complex_part, spatial_component,
+                                  result, error);
+                                output_file << fmt::format("{}  {}  ",
+                                                           result, error);
+                            }
                         }
+                        output_file << '\n';
                     }
-                    output_file << '\n';
                 }
             }
         }
