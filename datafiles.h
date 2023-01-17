@@ -1,9 +1,11 @@
 #ifndef DATAFILES_H
 #define DATAFILES_H
 
+#include <algorithm>
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <map>
 
 #include<fmt/format.h>
@@ -12,29 +14,32 @@
 /*
 Linear grid evaluator
 */
-double linear_step(double start, double end, size_t N, size_t index)
+double linear_step(double, double, size_t, size_t);
 
 /*
 Log-spaced grid evaluator
 */
-double log_step(double start, double end, size_t N, size_t index)
+double log_step(double, double, size_t, size_t);
 
 
 /*
 Read the passed stream, extracting a set number of key-value pairs
-into the passed map. Pairs are assumed to be listed sequentially
-and whitespace separated.
+into the passed map. Pairs are assumed to be listed one pair per line
+with the key first and then the value, separated by whitespace.
+Anything following the value will be ignored.
 */
 template <typename KeyType, typename ValueType>
 void read_param_entries(std::istream & in,
                         std::map<KeyType, ValueType> & params,
-                        size_t num_entries)
+                        std::string & comment)
 {
+    std::string line;
     KeyType name;
-    ValueType value;
-    for (size_t counter = 0; counter < num_entries; ++counter){
-        in >> name >> value;
-        params[name] = value;
+    while (std::getline(in, line)){
+        auto position = line.find(comment);
+        if (position != std::string::npos) line.erase(position);
+        std::stringstream line_stream(line);
+        if (line_stream >> name) line_stream >> params[name];
     }
 }
 

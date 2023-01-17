@@ -30,11 +30,8 @@ void linspace(double start, double end, size_t N, double samples[])
 
 
 int main(int argc, char* argv[]){
-
-    // fixed parameters
-    const gsl_integration_method method = adaptive_singular;
     gsl_set_error_handler_off();
-    const size_t num_input_params = 18;
+    const gsl_integration_method method = adaptive_singular;
     const CylindricalUnitVector directions[3] = {r_hat, phi_hat, z_hat};
     const PropagatorType re_or_im[2] = {real, imaginary};
 
@@ -45,10 +42,11 @@ int main(int argc, char* argv[]){
           // from the top of the source cylinder: z_detector = L + z_source
           // phi in the param file should be given in units of 2pi, but
           // in the output file it will be given in radians
-        std::string param_filename = argv[file_number];
+        std::string param_filename = fmt::format("{}.in", argv[file_number]);
         std::ifstream param_file(param_filename);
         std::map<std::string, std::string> input_params;
-        read_param_entries(param_file, input_params, num_input_params);
+        std::string comment("#");
+        read_param_entries(param_file, input_params, comment);
         std::string mode_name = input_params["mode"];
         auto m_N     = std::stoul(input_params["m_N"]);
         auto m_start   = std::stod(input_params["m_start"]);
@@ -86,7 +84,7 @@ int main(int argc, char* argv[]){
                            atol, rtol, method);
 
         // prep output file
-        std::ofstream output_file(fmt::format("output-{}", param_filename));
+        std::ofstream output_file(fmt::format("{}.out", argv[file_number]));
         write_map(output_file, input_params);
         output_file << '\n';
         output_file << fmt::format("m    r    phi    z    "
