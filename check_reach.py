@@ -48,6 +48,6 @@ def plot_reach_from_overlap(results):
 
 
 if __name__ == "__main__":
-    results = [("output-TE011-overlap-0.dat", "TE011"),
-               ("output-TM010-overlap-0.dat", "TM010")]
+    results = [("output-TE011-overlap.in", "TE011"),
+               ("output-TM010-overlap.in", "TM010")]
     plot_reach_from_overlap(results)

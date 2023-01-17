@@ -31,3 +31,5 @@
 
 # locals
 old_code/
+*.in
+*.out
