@@ -29,8 +29,7 @@ def plot_overviews(output_files, prefix=""):
         cax = divider.append_axes("right", size="5%", pad=0.05)
         fig.colorbar(cplot, cax=cax)
         ax.set_aspect("equal")
-        ax.set_title(title_text)
-        fig.savefig("{}.png".format(title_text), dpi=160)
+        fig.savefig("{}-dist-xz.png".format(run), dpi=160)
         plt.close(fig)
     # check qualitative structure of effective current
     # plot effective currents for phi = 0
@@ -45,14 +44,16 @@ def plot_overviews(output_files, prefix=""):
                     full_case = "{}_{}".format(re_or_im, comp)
                     j = out[run][full_case][m_index, :, 0, :]
                     abs_max = np.abs(j[np.isfinite(j)]).max()
-                    cplot = ax.pcolor(zs, xs, j, cmap="seismic", vmin=-abs_max, vmax=abs_max)
+                    cplot = ax.pcolor(zs, xs, j, cmap="seismic",
+                                      vmin=-abs_max, vmax=abs_max)
                     ax.set_aspect("equal")
                     divider = make_axes_locatable(ax)
                     cax = divider.append_axes("right", size="5%", pad=0.05)
                     fig.colorbar(cplot, cax=cax)
-                    title_text = "{}-m{}-{}-{}".format(run, m_index, comp, re_or_im)
-                    ax.set_title(title_text)
-                    fig.savefig("{}.png".format(title_text), dpi=160)
+                    base_text = "{}-{}-{}".format(run, comp, re_or_im)
+                    ax.set_title("{}, m={:0.2e}".format(base_text, m))
+                    fig_filename = "{}-m{}.png".format(base_text, m_index)
+                    fig.savefig(fig_filename, dpi=160)
                     plt.close(fig)
 
 
