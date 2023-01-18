@@ -119,12 +119,12 @@ def check_longitudinal_symmetry(output_files, prefix=""):
 
 
 if __name__ == "__main__":
-    plot_overviews(["crude-TM010.in.out",
-                    "crude-TE011.in.out",],
-                   prefix="crude-")
-    plot_overviews(["crude-farfield-TM010.in.out",
-                    "crude-farfield-TE011.in.out",],
-                   prefix="crude-farfield-")
+    plot_overviews(["check-nearfield-TM010.in.out",
+                    "check-nearfield-TE011.in.out",],
+                   prefix="check-nearfield-")
+    plot_overviews(["check-farfield-TM010.in.out",
+                    "check-farfield-TE011.in.out",],
+                   prefix="check-farfield-")
 
     # check_angular_dependence(crude_samplings, prefix="output-crude-")
 
