@@ -18,15 +18,16 @@ int main(int argc, char* argv[]){
     // fixed parameters
     const gsl_integration_method method = adaptive_singular;
     gsl_set_error_handler_off();
-    const size_t num_input_params = 12;
 
     // process each param file
     for (int file_number = 1; file_number < argc; ++file_number){
+        std::cout << fmt::format("{}...", param_filename) << std::endl;
         // read parameter file
         std::string param_filename = argv[file_number];
         std::ifstream param_file(param_filename);
         std::map<std::string, std::string> input_params;
-        read_param_entries(param_file, input_params, num_input_params);
+        std::string comment("#");
+        read_param_entries(param_file, input_params, comment);
         std::string source_mode = input_params["mode_s"];
         std::string detect_mode = input_params["mode_d"];
         auto Rs      = std::stod(input_params["Rs"]);
@@ -68,7 +69,7 @@ int main(int argc, char* argv[]){
                         Rd, Ld, sep, Edetect, atol, rtol, method);
 
         // prep output file
-        std::ofstream output_file(fmt::format("output-{}", param_filename));
+        std::ofstream output_file(fmt::format("{}.out", param_filename));
         write_map(output_file, input_params);
         output_file << '\n';
         output_file << fmt::format("m    overlap \n{}\n\n",

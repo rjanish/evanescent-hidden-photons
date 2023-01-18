@@ -37,6 +37,7 @@ int main(int argc, char* argv[]){
 
     // process each param file
     for (int file_number = 1; file_number < argc; ++file_number){
+        std::cout << fmt::format("{}...", param_filename) << std::endl;
         // read parameter file
           // z here is in 'detector coordinates', i.e. z measured
           // from the top of the source cylinder: z_detector = L + z_source
@@ -64,7 +65,6 @@ int main(int argc, char* argv[]){
         auto length  = std::stod(input_params["length"]);
         auto atol    = std::stod(input_params["atol"]);
         auto rtol    = std::stod(input_params["rtol"]);
-        std::cout << fmt::format("{}...", param_filename) << std::endl;
 
         // construct effective current functor
         VectorFieldOnCylinder Ki_emitter;

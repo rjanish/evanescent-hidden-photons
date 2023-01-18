@@ -16,12 +16,13 @@ def two_slopes_valley(x, y, s_l, s_r, index_l=0, index_r=-1):
     return np.max([left, right], axis=0)
 
 
-def plot_reach_from_overlap(results):
+def plot_reach_from_overlap(results, prefix=""):
     fig, ax = plt.subplots()
     colors = ["r", "b"]
     color_index = 0
     Nsub =10**3
-    for filename, label in results:
+    for filename in results: # expecting two files, TE011 and TM010
+        label = filename.split(sep='.')[0][len(prefix):]
         m, overlap = np.loadtxt(filename, skiprows=16).T
         m_subsample = np.geomspace(m[0], m[-1], Nsub)
         reach = overlap**(-0.5)
@@ -48,6 +49,6 @@ def plot_reach_from_overlap(results):
 
 
 if __name__ == "__main__":
-    results = [("output-TE011-overlap.in", "TE011"),
-               ("output-TM010-overlap.in", "TM010")]
-    plot_reach_from_overlap(results)
+    plot_reach_from_overlap(["checkoverlap-TE011.in.out",
+                             "checkoverlap-TM010.in.out"],
+                             prefix="checkoverlap-")
