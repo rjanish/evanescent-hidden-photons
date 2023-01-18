@@ -29,7 +29,7 @@ def plot_overviews(output_files, prefix=""):
         cax = divider.append_axes("right", size="5%", pad=0.05)
         fig.colorbar(cplot, cax=cax)
         ax.set_aspect("equal")
-        fig.savefig("{}-dist-xz.png".format(run), dpi=160)
+        fig.savefig("{}{}-dist-xz.png".format(prefix, run), dpi=160)
         plt.close(fig)
     # check qualitative structure of effective current
     # plot effective currents for phi = 0
@@ -52,7 +52,8 @@ def plot_overviews(output_files, prefix=""):
                     fig.colorbar(cplot, cax=cax)
                     base_text = "{}-{}-{}".format(run, comp, re_or_im)
                     ax.set_title("{}, m={:0.2e}".format(base_text, m))
-                    fig_filename = "{}-m{}.png".format(base_text, m_index)
+                    fig_filename = ("{}{}-m{}.png"
+                                    "".format(prefix, base_text, m_index))
                     fig.savefig(fig_filename, dpi=160)
                     plt.close(fig)
 
@@ -118,9 +119,13 @@ def check_longitudinal_symmetry(output_files, prefix=""):
 
 
 if __name__ == "__main__":
-    crude_samplings = ["crude-TM010.in.out",
-                       "crude-TE011.in.out",]
-    plot_overviews(crude_samplings, prefix="crude-")
+    plot_overviews(["crude-TM010.in.out",
+                    "crude-TE011.in.out",],
+                   prefix="crude-")
+    plot_overviews(["crude-farfield-TM010.in.out",
+                    "crude-farfield-TE011.in.out",],
+                   prefix="crude-farfield-")
+
     # check_angular_dependence(crude_samplings, prefix="output-crude-")
 
     # z_even_check = ["output-testeven-left-TM010-m10.dat",
