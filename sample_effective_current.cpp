@@ -42,7 +42,7 @@ int main(int argc, char* argv[]){
           // from the top of the source cylinder: z_detector = L + z_source
           // phi in the param file should be given in units of 2pi, but
           // in the output file it will be given in radians
-        std::string param_filename = fmt::format("{}.in", argv[file_number]);
+        std::string param_filename = argv[file_number];
         std::ifstream param_file(param_filename);
         std::map<std::string, std::string> input_params;
         std::string comment("#");
@@ -64,7 +64,6 @@ int main(int argc, char* argv[]){
         auto length  = std::stod(input_params["length"]);
         auto atol    = std::stod(input_params["atol"]);
         auto rtol    = std::stod(input_params["rtol"]);
-        auto mass    = std::stod(input_params["mass"]);
         std::cout << fmt::format("{}...", param_filename) << std::endl;
 
         // construct effective current functor
@@ -84,7 +83,7 @@ int main(int argc, char* argv[]){
                            atol, rtol, method);
 
         // prep output file
-        std::ofstream output_file(fmt::format("{}.out", argv[file_number]));
+        std::ofstream output_file(fmt::format("{}.out", param_filename));
         write_map(output_file, input_params);
         output_file << '\n';
         output_file << fmt::format("m    r    phi    z    "
@@ -110,7 +109,7 @@ int main(int argc, char* argv[]){
                                                    m, r, phi, z);
                         for(auto &spatial_component : directions){
                             for(auto &complex_part : re_or_im){
-                                J(r, phi, length + z, mass,
+                                J(r, phi, length + z, m,
                                   complex_part, spatial_component,
                                   result, error);
                                 output_file << fmt::format("{}  {}  ",

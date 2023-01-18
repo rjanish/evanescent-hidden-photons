@@ -15,14 +15,15 @@ def plot_overviews(output_files, prefix=""):
     # check unfolding of coordinates:
     # plot distance in the (z,x>0) plane (ie phi=0) as a function of x and z
     for run in out:
+        m = out[run]["m"][0,0,0,0]
         fig, ax = plt.subplots()
-        xs = out[run]["x"][:, 0, :]
-        zs = out[run]["z"][:, 0, :]
+        xs = out[run]["x"][0, :, 0, :]
+        zs = out[run]["z"][0, :, 0, :]
         r_zx = np.sqrt(zs**2 + xs**2)
         abs_max = np.abs(r_zx[np.isfinite(r_zx)]).max()
         cplot = ax.pcolor(zs, xs, r_zx, cmap="Blues", vmin=0, vmax=abs_max)
             # plot distance in the x-z plane
-        title_text = "{}-r_xz".format(run)
+        title_text = "{}: distance in xz plane".format(run)
         ax.set_title(title_text)
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="5%", pad=0.05)
@@ -34,23 +35,25 @@ def plot_overviews(output_files, prefix=""):
     # check qualitative structure of effective current
     # plot effective currents for phi = 0
     for run in out:
-        xs = out[run]["x"][:, 0, :]
-        zs = out[run]["z"][:, 0, :]
-        for re_or_im in ["re", "im"]:
-            for comp in ["jr", "jphi", "jz"]:
-                fig, ax = plt.subplots()
-                full_case = "{}_{}".format(re_or_im, comp)
-                j = out[run][full_case][:, 0, :]
-                abs_max = np.abs(j[np.isfinite(j)]).max()
-                cplot = ax.pcolor(zs, xs, j, cmap="seismic", vmin=-abs_max, vmax=abs_max)
-                ax.set_aspect("equal")
-                divider = make_axes_locatable(ax)
-                cax = divider.append_axes("right", size="5%", pad=0.05)
-                fig.colorbar(cplot, cax=cax)
-                title_text = "{}-{}-{}".format(run, comp, re_or_im)
-                ax.set_title(title_text)
-                fig.savefig("{}.png".format(title_text), dpi=160)
-                plt.close(fig)
+        masses = out[run]["m"][:,0,0,0]
+        for m_index, m in enumerate(masses):
+            xs = out[run]["x"][m_index, :, 0, :]
+            zs = out[run]["z"][m_index, :, 0, :]
+            for re_or_im in ["re", "im"]:
+                for comp in ["jr", "jphi", "jz"]:
+                    fig, ax = plt.subplots()
+                    full_case = "{}_{}".format(re_or_im, comp)
+                    j = out[run][full_case][m_index, :, 0, :]
+                    abs_max = np.abs(j[np.isfinite(j)]).max()
+                    cplot = ax.pcolor(zs, xs, j, cmap="seismic", vmin=-abs_max, vmax=abs_max)
+                    ax.set_aspect("equal")
+                    divider = make_axes_locatable(ax)
+                    cax = divider.append_axes("right", size="5%", pad=0.05)
+                    fig.colorbar(cplot, cax=cax)
+                    title_text = "{}-m{}-{}-{}".format(run, m_index, comp, re_or_im)
+                    ax.set_title(title_text)
+                    fig.savefig("{}.png".format(title_text), dpi=160)
+                    plt.close(fig)
 
 
 def check_angular_dependence(output_files, prefix=""):
@@ -114,16 +117,14 @@ def check_longitudinal_symmetry(output_files, prefix=""):
 
 
 if __name__ == "__main__":
-    crude_samplings = ["output-crude-TM010evan.dat",
-                       "output-crude-TM010prop.dat",
-                       "output-crude-TE011evan.dat",
-                       "output-crude-TE011prop.dat"]
-    plot_overviews(crude_samplings, prefix="output-crude-")
-    check_angular_dependence(crude_samplings, prefix="output-crude-")
+    crude_samplings = ["crude-TM010.in.out",
+                       "crude-TE011.in.out",]
+    plot_overviews(crude_samplings, prefix="crude-")
+    # check_angular_dependence(crude_samplings, prefix="output-crude-")
 
-    z_even_check = ["output-testeven-left-TM010-m10.dat",
-                    "output-testeven-left-TE011-m10.dat",
-                    "output-testeven-right-TM010-m10.dat",
-                    "output-testeven-right-TE011-m10.dat"]
-    check_longitudinal_symmetry(z_even_check, prefix="output-testeven-")
+    # z_even_check = ["output-testeven-left-TM010-m10.dat",
+    #                 "output-testeven-left-TE011-m10.dat",
+    #                 "output-testeven-right-TM010-m10.dat",
+    #                 "output-testeven-right-TE011-m10.dat"]
+    # check_longitudinal_symmetry(z_even_check, prefix="output-testeven-")
 
