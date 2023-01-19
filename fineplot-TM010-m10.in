@@ -1,0 +1,26 @@
+# fine sampling of effective current in xz plane (phi=0) outside of
+# one quadrant of the cavity, for paper plots
+
+mode        TM010
+
+radius      1.0
+length      3.0
+
+m_start     10.0
+m_end       10.0
+m_N         1
+
+r_start     0.0
+r_end       1.5000001  # avoid sampling one the cavity wall
+r_N         500
+
+phi_start   0.0
+phi_end     0.0
+phi_N       1
+
+z_start     -0.5
+z_end       0.5000001  # avoid sampling one the cavity wall
+z_N         500
+
+atol        1e-9
+rtol        1e-6
