@@ -1,6 +1,5 @@
-# testing
-# explaination
-# stuff
+# overlap integral as a function of m spanning propagating and
+# evanescent values, to check expected power-law scalings
 
 Rs            1.0
 Ls            3.0
@@ -10,11 +9,11 @@ Rd            1.0
 Ld            3.0
 mode_d        TE011
 
-sep           1e-4
+sep           1e-4   # gap between cavities
 
 m_start       1e-3
 m_end         1e2
-m_N           10
+m_N           12
 
 atol          1e-9
 rtol          1e-6
