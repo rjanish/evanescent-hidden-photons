@@ -37,13 +37,13 @@ int main(int argc, char* argv[]){
 
     // process each param file
     for (int file_number = 1; file_number < argc; ++file_number){
+        std::string param_filename = argv[file_number];
         std::cout << fmt::format("{}...", param_filename) << std::endl;
         // read parameter file
           // z here is in 'detector coordinates', i.e. z measured
           // from the top of the source cylinder: z_detector = L + z_source
           // phi in the param file should be given in units of 2pi, but
           // in the output file it will be given in radians
-        std::string param_filename = argv[file_number];
         std::ifstream param_file(param_filename);
         std::map<std::string, std::string> input_params;
         std::string comment("#");

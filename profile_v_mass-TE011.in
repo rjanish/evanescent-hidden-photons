@@ -1,0 +1,28 @@
+# compute j_eff(r) at several masses from just below omega to well
+# above it, to demonstrate agreement between the analytical estimate
+# for large m and these numerical results.
+
+mode        TE011
+
+radius      1.0
+length      3.0
+
+# frequency of TE011 R=1 L=3 is 3.972228
+m_start     0.3972228
+m_end       397.2228
+m_N         10
+
+r_start     0.0
+r_end       1.0000001
+r_N         24
+
+phi_start   0.0
+phi_end     0.0
+phi_N       1
+
+z_start     1e-4
+z_end       1e-4
+z_N         1
+
+atol        1e-9
+rtol        1e-6
