@@ -31,5 +31,7 @@
 
 # locals
 old_code/
-*.in
-*.out
+old_output/
+# keep computation output files (anything with double
+# extensions, the second of which is .out)
+!*.*.out
