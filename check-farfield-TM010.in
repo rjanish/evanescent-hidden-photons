@@ -1,0 +1,29 @@
+# A coarse sampling of j_eff in a 2d slice a large distance away for
+# a propagating evanescent mass value, as would be relevant for a
+# far-field propagating lsw experiment.
+
+# The purpose of this is to check the qualitative structure of j_eff
+
+mode        TM010  # rotationally symmetric mode
+
+radius      1.0
+length      3.0
+
+m_start     0.1
+m_end       0.1
+m_N         1
+
+r_start     0.0
+r_end       1.0000001  # avoid sampling exactly on cavity boundary
+r_N         41
+
+phi_start   0.0  # in units of 2pi
+phi_end     0.0
+phi_N       1
+
+z_start     100
+z_end       103
+z_N         41
+
+atol        1e-9
+rtol        1e-6

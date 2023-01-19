@@ -1,0 +1,30 @@
+# A coarse sampling of j_eff in a cylindrical shell surrounding the
+# entire cavity, for a propagating and evanescent mass.
+
+# The purpose of this is to test the direction of j_eff, rotational
+# symmetry and parity about cavity center, and check the qualitative
+# structure
+
+mode        TM010  # rotationally symmetric mode
+
+radius      1.0
+length      3.0
+
+m_start     0.1
+m_end       10.0
+m_N         2
+
+r_start     0.0
+r_end       1.5000001  # avoid sampling exactly on cavity boundary
+r_N         41
+
+phi_start   0.0  # in units of 2pi
+phi_end     1.0
+phi_N       7
+
+z_start     -3.5
+z_end       0.5000001  # avoid sampling exactly on cavity boundary
+z_N         41
+
+atol        1e-9
+rtol        1e-6
