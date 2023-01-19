@@ -1,0 +1,27 @@
+# sample effective current for purpose of testing parity in z
+# about the center of the cavity.  This samples outside the cavity
+# on the right side (z > 0).
+
+mode        TE011
+
+radius      1.0
+length      3.0
+
+m_start     0.1
+m_end       10.0
+m_N         2
+
+r_start     0.0
+r_end       1.5000001  # avoid sampling on the radial edge
+r_N         10
+
+phi_start   0.0
+phi_end     0.0
+phi_N       1
+
+z_start     0.001
+z_end       0.5
+z_N         30
+
+atol        1e-9
+rtol        1e-6

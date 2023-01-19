@@ -29,7 +29,9 @@ def plot_overviews(output_files, prefix=""):
         cax = divider.append_axes("right", size="5%", pad=0.05)
         fig.colorbar(cplot, cax=cax)
         ax.set_aspect("equal")
-        fig.savefig("{}{}-dist-xz.png".format(prefix, run), dpi=160)
+        fig_filename = "{}{}-dist-xz.png".format(prefix, run)
+        fig.savefig(fig_filename, dpi=160)
+        print("    {}".format(fig_filename))
         plt.close(fig)
     # check qualitative structure of effective current
     # plot effective currents for phi = 0
@@ -55,6 +57,7 @@ def plot_overviews(output_files, prefix=""):
                     fig_filename = ("{}{}-m{}.png"
                                     "".format(prefix, base_text, m_index))
                     fig.savefig(fig_filename, dpi=160)
+                    print("    {}".format(fig_filename))
                     plt.close(fig)
 
 
@@ -63,74 +66,96 @@ def check_angular_dependence(output_files, prefix=""):
     Check that effective current is independent of polar angle, which
     must be true for any n=0 mode (such as TE011 and TM010)
     """
-    print("\n" + "-"*40 +"\ncheck for phi-independence")
     out = ec.read_effective_current_output(output_files, prefix)
     print("\ntotal variation over phi:")
     for run in out:
-        angles = out[run]["phi"][0, :, 0]
-        avg_dsq = 0
-        for re_or_im in ["re", "im"]:
-            for comp in ["jr", "jphi", "jz"]:
-                full_case = "{}_{}".format(re_or_im, comp)
-                j0 = out[run][full_case][:, 0, :]
-                finite = np.isfinite(j0)
-                for phi_index in range(len(angles)):
-                    ji = out[run][full_case][:, phi_index, :]
-                    d = j0[finite] - ji[finite]
-                    avg_dsq += np.sum(d**2)/np.sum(finite)/6.0
-        print("  [{}] average difference squared: {:0.2e}".format(run, avg_dsq))
+        masses = out[run]["m"][:,0,0,0]
+        for m_index, m in enumerate(masses):
+            angles = out[run]["phi"][m_index, 0, :, 0]
+            avg_dsq = 0
+            for re_or_im in ["re", "im"]:
+                for comp in ["jr", "jphi", "jz"]:
+                    full_case = "{}_{}".format(re_or_im, comp)
+                    j0 = out[run][full_case][m_index, :, 0, :]
+                    finite = np.isfinite(j0)
+                    for phi_index in range(len(angles)):
+                        ji = out[run][full_case][m_index, :, phi_index, :]
+                        d = j0[finite] - ji[finite]
+                        avg_dsq += np.sum(d**2)/np.sum(finite)/6.0
+            print("  [{}, m={:0.2e}] average difference squared: "
+                  "{:0.2e}".format(run, m, avg_dsq))
     return
 
 
-def check_longitudinal_symmetry(output_files, prefix=""):
+def check_longitudinal_symmetry(output_files, prefix="", tol=1e-10):
     """
     check if the effective current is even or odd in z about the
     center of the cavity. It must be either even or odd for cylindrical
     cavities, as the cavity modes themselves are either even or odd.
     """
-    print("\n" + "-"*40 +"\ncheck for parity about center of cavity")
     out = ec.read_effective_current_output(output_files, prefix)
     unique_setups = []
+    print("\nprocessing runs:")
     for run in out:
         setup = run.split(sep="-", maxsplit=1)[1]
         if setup not in unique_setups:
             unique_setups.append(setup)
+            print("    {}".format(setup))
     for setup in unique_setups:
-        print("\n"+setup)
-
         left = "left-{}".format(setup)
-        center = -out[left]["length"]/2.0
         right = "right-{}".format(setup)
-        sample_midpoints = 0.5*(out[left]["z"][0,0,:] +
-                                out[right]["z"][0,0,:])
-        print("  check that sample points are even about cavity center:\n"
+        masses = out[left]["m"][:,0,0,0]
+        print("\n{} using".format(setup))
+        for m_index, m in enumerate(masses):
+            print("  m = {:0.2e}".format(m))
+        center = -out[left]["length"]/2.0
+        sample_midpoints = 0.5*( out[left]["z"][0,0,0,:] +
+                                out[right]["z"][0,0,0,:])
+        print("\n  verify sample points are even about cavity center:\n"
               "    max|(z_left + z_right)/2 - center| = {:0.2e}".format(
                np.abs(sample_midpoints - center).max()))
-        print("  check that effective current is even or odd")
+        print("\n  check that effective current is even or odd")
         for re_or_im in ["re", "im"]:
             for comp in ["jr", "jphi", "jz"]:
                 full_case = "{}_{}".format(re_or_im, comp)
-                diff = out[left][full_case] - out[right][full_case]
-                add = out[left][full_case] + out[right][full_case]
+                check_even = np.abs(
+                    out[left][full_case] - out[right][full_case]).max()
+                check_odd  = np.abs(
+                    out[left][full_case] + out[right][full_case]).max()
                 print("    [{}]\n"
-                      "    check even:    max(|j_left - j_right|) = {:0.2e}\n"
-                      "    check odd:     max(|j_left + j_right|) = {:0.2e}"
-                      "".format(full_case, np.abs(diff).max(), np.abs(add).max()))
+                      "        [check even]    "
+                      "max(|j_left - j_right|) = {:0.2e}\n"
+                      "        [check odd]     "
+                      "max(|j_left + j_right|) = {:0.2e}"
+                      "".format(full_case, check_odd, check_even))
+                if (check_odd < tol and check_even < tol):
+                    print("        {} is zero".format(full_case))
+                elif (check_odd < tol and check_even > tol):
+                    print("        {} is odd".format(full_case))
+                elif (check_odd > tol and check_even < tol):
+                    print("        {} is even".format(full_case))
 
 
 if __name__ == "__main__":
-    plot_overviews(["check-nearfield-TM010.in.out",
-                    "check-nearfield-TE011.in.out",],
+
+    nearfield_tests = ["check-nearfield-TM010.in.out",
+                       "check-nearfield-TE011.in.out",]
+    farfield_tests = ["check-farfield-TM010.in.out",
+                      "check-farfield-TE011.in.out",]
+    parity_tests = ["testparity-left-TM010.in.out",
+                    "testparity-left-TE011.in.out",
+                    "testparity-right-TM010.in.out",
+                    "testparity-right-TE011.in.out"]
+
+    print("\n" + "-"*40 +"\nplotting j_eff...")
+    plot_overviews(nearfield_tests,
                    prefix="check-nearfield-")
-    plot_overviews(["check-farfield-TM010.in.out",
-                    "check-farfield-TE011.in.out",],
+    plot_overviews(farfield_tests,
                    prefix="check-farfield-")
 
-    # check_angular_dependence(crude_samplings, prefix="output-crude-")
+    print("\n" + "-"*40 +"\ncheck for phi-independence")
+    check_angular_dependence(nearfield_tests, prefix="check-nearfield-")
 
-    # z_even_check = ["output-testeven-left-TM010-m10.dat",
-    #                 "output-testeven-left-TE011-m10.dat",
-    #                 "output-testeven-right-TM010-m10.dat",
-    #                 "output-testeven-right-TE011-m10.dat"]
-    # check_longitudinal_symmetry(z_even_check, prefix="output-testeven-")
+    print("\n" + "-"*40 +"\ncheck for parity about center of cavity")
+    check_longitudinal_symmetry(parity_tests, prefix="testparity-")
 
