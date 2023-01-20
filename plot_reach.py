@@ -6,15 +6,10 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
-def one_slope(x, y, power, index=0):
-    return y[index]*(x/x[index])**power
-
-
-def two_slopes_valley(x, y, s_l, s_r, index_l=0, index_r=-1):
-    left = one_slope(x, y, s_l, index=index_l)
-    right = one_slope(x, y, s_r, index=index_r)
-    return np.max([left, right], axis=0)
-
+def nuGHz_TE011(Rcm, Lcm):
+    xprime01 = spec.jn_zeros(1, 1)
+    cm_inv_in_GHz = 29.4118 # 1 = 29.4118 cm GHz, see mathematica
+    return 2*np.pi*np.sqrt((xprime01/Rcm)**2 + (np.pi/Lcm)**2)*cm_inv_in_GHz
 
 def plot_reach_from_overlap(results, prefix=""):
     fig, ax = plt.subplots()
