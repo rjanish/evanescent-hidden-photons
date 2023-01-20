@@ -21,9 +21,9 @@ int main(int argc, char* argv[]){
 
     // process each param file
     for (int file_number = 1; file_number < argc; ++file_number){
+        std::string param_filename = argv[file_number];
         std::cout << fmt::format("{}...", param_filename) << std::endl;
         // read parameter file
-        std::string param_filename = argv[file_number];
         std::ifstream param_file(param_filename);
         std::map<std::string, std::string> input_params;
         std::string comment("#");
