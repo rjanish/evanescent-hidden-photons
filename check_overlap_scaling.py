@@ -23,9 +23,11 @@ def plot_reach_from_overlap(results, prefix=""):
     Nsub =10**3
     for filename in results: # expecting two files, TE011 and TM010
         label = filename.split(sep='.')[0][len(prefix):]
-        m, overlap = np.loadtxt(filename, skiprows=16).T
+        m, eta = np.loadtxt(filename, skiprows=16).T
         m_subsample = np.geomspace(m[0], m[-1], Nsub)
-        reach = overlap**(-0.5)
+        reach = (m/eta)**(0.5) 
+          # Psig = eps^4 Bemit^2 exp(-2md) \eta^2/m^2 (see paper)
+          # so all else fixed, \eps \propto sqrt(m/eta)
         color = colors[color_index]
         ax.loglog(m, reach, marker='.', linestyle='',
                   label=label, color=color, alpha=0.7)
@@ -44,7 +46,7 @@ def plot_reach_from_overlap(results, prefix=""):
     ax.set_xlabel("m R")
     ax.set_ylabel("epsilon (unormalized)")
     ax.set_title("unormalized reach")
-    fig.savefig("checkreach.png", dpi=160)
+    fig.savefig("check-reachscaling.png", dpi=160)
     plt.close(fig)
 
 
