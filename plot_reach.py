@@ -6,10 +6,15 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
-def nuGHz_TE011(Rcm, Lcm):
-    xprime01 = spec.jn_zeros(1, 1)
-    cm_inv_in_GHz = 29.4118 # 1 = 29.4118 cm GHz, see mathematica
-    return 2*np.pi*np.sqrt((xprime01/Rcm)**2 + (np.pi/Lcm)**2)*cm_inv_in_GHz
+def m_in_eV(m_in_cm):
+    return (1.961e-5)*m_in_cm
+
+def epsilon_reach(d_cm, Bin_T, tint_sec, T_K, m_eV, Qrec, eta, snr):
+    overall_scale = 1.108e-6  # see paper and mathematica
+    gap_scale = 25500.0       # see paper and mathematica
+    return (overall_scale*np.exp(gap_scale*m_ev*d_cm)*
+            (SNR*T_K/(Qrec*tint_sec))**(0.25)*
+            (m_ev/(Bin_T*eta))**(0.5))
 
 def plot_reach_from_overlap(results, prefix=""):
     fig, ax = plt.subplots()
