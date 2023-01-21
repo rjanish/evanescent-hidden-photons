@@ -6,21 +6,31 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
-def m_in_ev(m_in_cm):
-    return (1.961e-5)*m_in_cm
+def m_in_cm(m_in_eV):
+    return m_in_eV/(1.961e-5)
 
 class epsilon_reach():
-    def __init__(d_cm, Bin_T, tint_sec, T_K, Qrec, eta_filenames, eta_prefix):
+    def __init__(d_cm, Bin_T, tint_sec, T_K, Qrec, eta_filename, eta_prefix):
         self.d_cm = d_cm
         self.Bin_T = Bin_T
         self.tint_sec = tint_sec
         self.T_K = T_K
         self.Qrec = Qrec
-        self.eta_numerics = {}
-        for filename in eta_filenames:
-            # label = filename.split(sep='.')[0][len(prefix):]
-            label = filename[len(prefix):len(prefix)+5] 
-             self.eta_numerics[label] = np.loadtxt(filename, skiprows=16).T
+        self.m_cm_numeric, self.eta_numeric = np.loadtxt(eta_filename, skiprows=16).T
+        self.m_min = np.min(m_cm_numeric)
+        self.m_max = np.max(m_cm_numeric)
+
+    def evaluate(m_ev, snr=None):
+        m_cm = m_in_cm(m_in_ev)
+        if self.m_min < m_cm < self.m_max:
+            #interpolate
+        elif m_cm < self.m_min:
+            #extrapolate power law
+        elif m_cm > self.m_max:
+            # extrapolate power law times exponential
+
+
+
        
     def numeric(m_ev, eta, snr=None):
         overall_scale = 1.108e-6  # see paper and mathematica
