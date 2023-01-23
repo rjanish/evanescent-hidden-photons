@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 
+import warnings
+warnings.filterwarnings("error")
+
 import numpy as np
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+import parse_sample_effective_current as ec
 
-def m_in_cm(m_in_eV):
-    return m_in_eV/(1.961e-5)
+
+def eV_cm():
+    return 5.1e4
 
 def fit_decaying_powerlaw(x, y, k):
     """
@@ -22,59 +27,74 @@ def fit_decaying_powerlaw(x, y, k):
     return A, p
 
 class epsilon_reach():
-    def __init__(d_cm, Bin_T, tint_sec, T_K, Qrec, eta_filename, eta_prefix):
-        self.overall_scale = 1.108e-6  # see paper and mathematica
-        self.gap_scale = 25500.0       # see paper and mathematica
-        self.d_cm = d_cm
+    def __init__(self, Bin_T, tint_sec, T_K, Qrec, eta_filename, eta_prefix):
+        self.overall_scale = 4.907e-9  # see paper and mathematica
         self.Bin_T = Bin_T
         self.tint_sec = tint_sec
         self.T_K = T_K
         self.Qrec = Qrec
-        self.m_cm_numeric, self.eta_numeric = np.loadtxt(eta_filename, skiprows=16).T
-        ordered_indicies = np.argpartition(self.m_cm_numeric, self.m_cm_numeric.size - 1)
+        # read numerics output files
+        self.runs = ec.read_overlap_output(eta_filename)
+        key = list(self.runs.keys())[0]
+        self.m_cm_numeric, self.eta_numeric = self.runs[key]["rawdata"].T
+        self.d_cm = self.runs[key]["sep"]
+        self.order = np.argpartition(self.m_cm_numeric, self.m_cm_numeric.size - 1)
         # set lower extrapolation (power law)
-        left_masses  = self.m_cm_numeric(ordered_indicies[:2])
-        left_reaches = self.numeric_reach(left_masses, 
-                                          self.eta_numeric(ordered_indicies[:2]))
-        self.left_exponent, self.left_scale = fit_decaying_powerlaw(
-            left_masses, left_reaches, 0.0)
+        self.left_m_cm_numeric  = self.m_cm_numeric[self.order[:2]]
+        left_reaches = self.numeric(self.left_m_cm_numeric, 
+                                    self.eta_numeric[self.order[:2]])
+        self.left_scale, self.left_power = fit_decaying_powerlaw(
+            self.left_m_cm_numeric, left_reaches, 0.0)
         # set upper extrapolation (power law time exponential)
-        right_masses  = self.m_cm_numeric(ordered_indicies[-2:])
-        right_reaches = self.numeric_reach(right_masses, 
-                                           self.eta_numeric(ordered_indicies[-2:]))
-        self.right_exponent, self.right_scale = fit_decaying_powerlaw(
-            right_masses, right_reaches, -2*self.gap_scale*self.d_cm)
+        self.right_m_cm_numeric = self.m_cm_numeric[self.order[-2:]]
+        right_reaches = self.numeric(self.right_m_cm_numeric, 
+                                     self.eta_numeric[self.order[-2:]])
+        self.right_scale, self.right_power = fit_decaying_powerlaw(
+            self.right_m_cm_numeric, right_reaches, -0.5*self.d_cm)
 
-    def numeric_reach(m_ev, eta):
-        return (self.overall_scale*np.exp(self.gap_scale*m_ev*self.d_cm)*
+    def numeric(self, m_cm, eta):
+        return (self.overall_scale*np.exp(0.5*m_cm*self.d_cm)*
                 (self.T_K/(self.Qrec*self.tint_sec))**(0.25)*
-                (m_ev/(self.Bin_T*eta))**(0.5))
+                (m_cm/(self.Bin_T*eta))**(0.5))
 
-    def left_reach(m_ev):
-        return self.left_scale*(m_eV**self.left_power)/(snr**0.25)
+    def left(self, m_cm):
+        return self.left_scale*(m_cm**self.left_power)
 
-    def right_reach(m_ev):
-        return (self.right_scale*(m_eV**self.right_power) * 
-                np.exp(self.gap_scale*m_ev*self.d_cm))
+    def right(self, m_cm, upper_arg_lim=500):
+        arg = 0.5*m_cm*self.d_cm
+        arg[arg > upper_arg_lim] = upper_arg_lim
+        return self.right_scale*(m_cm**self.right_power)*np.exp(arg)
+        
 
-    def evaulate(m_ev, snr=1.0):
-        # compute reach by interpolation within numerics and using left/right outisde it
-        return
-
-def plot_reach_from_overlap(results, d_cm, Bin_T, tint_sec,
-                            T_K, Qrec, snr, prefix=""):
+def plot_reach_from_overlap(results, Bin_T, tint_sec, T_K, Qrec, snr, prefix=""):
     fig, ax = plt.subplots()
-    for filename in results: # expecting two files, TE011 and TM010
-        # label = filename.split(sep='.')[0][len(prefix):]
-        label = filename[len(prefix):len(prefix)+5] 
-        m_cm, eta = np.loadtxt(filename, skiprows=16).T
-        reach = epsilon_reach_numeric(d_cm, Bin_T, tint_sec, T_K, m_in_ev(m_cm), Qrec, eta, snr)
-        ax.loglog(m_in_ev(m_cm), reach, marker='.', linestyle='',
-                  label=label, alpha=0.7)
-    ax.legend()
+    color = ['r', 'b']
+    for color_index, filename in enumerate(results):
+        label = filename.split(".")[0][len(prefix):] 
+        reach = epsilon_reach(Bin_T, tint_sec, T_K, Qrec, filename, prefix)
+        numeric_reaches = reach.numeric(reach.m_cm_numeric, reach.eta_numeric)*(snr**0.25)
+        ax.loglog(reach.m_cm_numeric/eV_cm(), 
+                  numeric_reaches, 
+                  marker='.', linestyle='-', alpha=0.6, color=color[color_index])
+        m_ev_limits = np.array([1e-11, 1e2])
+        Nextrap = 3
+        m_cm_limits = m_ev_limits*eV_cm()
+        m_left_cm = np.logspace(np.log10(m_cm_limits[0]), 
+                                np.log10(reach.left_m_cm_numeric[0]), 
+                                Nextrap*np.log10(reach.left_m_cm_numeric[0]/m_cm_limits[0]))
+        ax.loglog(m_left_cm/eV_cm(), reach.left(m_left_cm)*(snr**0.25), 
+                  marker='.', linestyle='--', alpha=0.4, color=color[color_index])
+        m_right_cm = np.logspace(np.log10(reach.right_m_cm_numeric[1]), 
+                                 np.log10(m_cm_limits[1]),
+                                 Nextrap*np.log10(m_cm_limits[1]/reach.left_m_cm_numeric[1]))
+        ax.loglog(m_right_cm/eV_cm(), reach.right(m_right_cm)*(snr**0.25), 
+                  marker='.', linestyle='--', alpha=0.4, color=color[color_index])
+        ax.axvline(2.0/reach.d_cm/eV_cm(), color='k', linestyle='dotted', alpha=0.3)
     ax.set_xlabel("m [eV]")
     ax.set_ylabel("epsilon")
     ax.set_title("reach")
+    ax.set_xlim(m_ev_limits)
+    ax.set_ylim([0.1*numeric_reaches.min(), 1])
     fig.savefig("reach.png", dpi=160)
     plt.close(fig)
 
@@ -83,11 +103,10 @@ if __name__ == "__main__":
     eta_files = ["checkoverlap-TE011.in.out",
                  "checkoverlap-TM010.in.out"]
     eta_prefix = "checkoverlap-"
-    d_cm = 0.05 
     Bin_T = 0.05
     tint_sec = 600.0         
     T_K = 3 
     Qrec = 1e10
     snr = 5
-    plot_reach_from_overlap(eta_files, d_cm, Bin_T, tint_sec,
+    plot_reach_from_overlap(eta_files, Bin_T, tint_sec,
                             T_K, Qrec, snr, prefix=eta_prefix)
