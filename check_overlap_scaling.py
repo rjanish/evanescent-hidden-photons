@@ -22,9 +22,9 @@ def plot_reach_from_overlap(results, prefix=""):
     color_index = 0
     Nsub =10**3
     for filename in results: # expecting two files, TE011 and TM010
-        label = filename.split(sep='.')[0][len(prefix):]
+        label = filename.split('.')[0][len(prefix):]
         m, eta = np.loadtxt(filename, skiprows=16).T
-        m_subsample = np.geomspace(m[0], m[-1], Nsub)
+        m_subsample = np.logspace(np.log10(m[0]), np.log10(m[-1]), Nsub)
         reach = (m/eta)**(0.5) 
           # Psig = eps^4 Bemit^2 exp(-2md) \eta^2/m^2 (see paper)
           # so all else fixed, \eps \propto sqrt(m/eta)

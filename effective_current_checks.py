@@ -87,7 +87,7 @@ def check_angular_dependence(output_files, prefix=""):
     return
 
 
-def check_longitudinal_symmetry(output_files, prefix="", tol=1e-10):
+def check_parity(output_files, prefix="", tol=1e-10):
     """
     check if the effective current is even or odd in z about the
     center of the cavity. It must be either even or odd for cylindrical
@@ -97,7 +97,8 @@ def check_longitudinal_symmetry(output_files, prefix="", tol=1e-10):
     unique_setups = []
     print("\nprocessing runs:")
     for run in out:
-        setup = run.split(sep="-", maxsplit=1)[1]
+        print(run)
+        setup = run.split("-")[1]
         if setup not in unique_setups:
             unique_setups.append(setup)
             print("    {}".format(setup))
@@ -157,5 +158,5 @@ if __name__ == "__main__":
     check_angular_dependence(nearfield_tests, prefix="check-nearfield-")
 
     print("\n" + "-"*40 +"\ncheck for parity about center of cavity")
-    check_longitudinal_symmetry(parity_tests, prefix="testparity-")
+    check_parity(parity_tests, prefix="testparity-")
 
