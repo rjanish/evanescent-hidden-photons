@@ -1,5 +1,5 @@
 /*
-Test my wrappers for the numerical integration routines of GSL 
+Test my wrappers for the numerical integration routines of GSL
 */
 
 #include <stdio.h>
@@ -45,10 +45,12 @@ class Trig {
 };
 
 
+
+
 int main (void)
 {
 
-  // test power function 
+  // test power function
 
   RaiseToPower cube(3);
   gsl_function integrand_quad = make_gsl_function_from_functor(&cube);
@@ -63,7 +65,7 @@ int main (void)
 
   printf("int_0^1 dx x^3 ?= %f\n", result);
 
-  // test trig function 
+  // test trig function
   printf("\n ----- trig funcs ----- \n");
 
   Trig trig('c');

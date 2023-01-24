@@ -9,18 +9,21 @@ mode        TE011  # rotationally symmetric mode
 
 #radius      50.0
 #length      0.1
+
 radius      1.0
 length      0.002
 
 # frequency of TE011 R=1, L=0.02 is 1570.8
 #m_start     10.0
 #m_end       10.0
+
 m_start     150
 m_end       150
 m_N         1
 
 r_start     0.0
 #r_end       55.0000001  # avoid sampling exactly on cavity boundary
+
 r_end       1.2000001  # avoid sampling exactly on cavity boundary
 r_N         3
 
