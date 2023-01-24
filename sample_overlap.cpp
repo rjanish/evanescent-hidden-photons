@@ -70,7 +70,7 @@ int main(int argc, char* argv[]){
 
         // prep output file
         std::ofstream output_file(fmt::format("{}.out", param_filename));
-        input_params["omega"] = omega_func(Rs, Ls);
+        input_params["omega"] = fmt::format("{:0.6e}", omega_func(Rs, Ls));
         write_map(output_file, input_params);
         output_file << '\n';
         output_file << fmt::format("m    overlap \n{}\n\n",

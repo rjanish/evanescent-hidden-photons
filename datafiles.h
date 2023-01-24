@@ -36,8 +36,8 @@ void read_param_entries(std::istream & in,
     std::string line;
     KeyType name;
     while (std::getline(in, line)){
-        auto position = line.find(comment);
-        if (position != std::string::npos) line.erase(position);
+        auto comment_start = line.find(comment);
+        if (comment_start != std::string::npos) line.erase(comment_start);
         std::stringstream line_stream(line);
         if (line_stream >> name) line_stream >> params[name];
     }
