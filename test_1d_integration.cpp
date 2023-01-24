@@ -89,5 +89,12 @@ int main (void)
   gsl_integration_qng(&integrand_trig, 0, M_PI/2.0, 1e-12, 1e-7, &result, &error, &neval);
   printf("int_0^pi/2 dx sin(x) ?= %f\n", result);
 
+  size_t limit = 1e5;
+  gsl_integration_workspace * workspace = gsl_integration_workspace_alloc(limit);
+  gsl_integration_qag(&integrand_trig, 0, 1e4, 1e-12, 1e-7,
+                       limit, 1, workspace,
+                       &result, &error);
+  printf("int_0^1e5  dx sin(x) ?= %e +- %e\n", result,error);
+
   return 0;
 }

@@ -2,19 +2,19 @@
 # evanescent values, to check expected power-law scalings
 
 Rs            1.0 #cm
-Ls            0.025  #cm
+Ls            0.03  #cm
 mode_s        TE011
 
 Rd            1.0 #cm
-Ld            0.025  #cm
+Ld            0.03  #cm
 mode_d        TE011
 
 sep           1e-3 #cm, gap between cavities
 
 # frequency of TE011 R=50, L=0.1 is 31.416
-m_start     100.0    #cm^-1
-m_end       100.0    #cm^-1
-m_N         1
+m_start     5    #cm^-1
+m_end       500    #cm^-1
+m_N         5
 
 atol          1e-6
 rtol          1e-3
