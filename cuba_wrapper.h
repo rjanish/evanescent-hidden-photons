@@ -6,40 +6,92 @@
 
 
 /*
-Convert any functor f(in[ndim], out[ncomp]) to a function
-with a cuda integrand signature. All extra parameters should be
-set in the functor's attributes, including ndim and ncomp.
+Define an integral over a ndim hypercube, with the integrand a vector 
+of ncomp components. integrand is a callable object with signiture 
+  void integrand(double input[ndim], double output[ncomp]). 
+xmin and xmax are (ndim,) arrays giving the boundaries of the 
+integration region.  
 */
-template<typename Func>
-int cuba_dressed_integrand(const int *ndim, const double x[],
-                   const int *ncomp, double f[],
-                   void * ptr_to_integrand)
+template<typename Func, int ndim_in>
+class IntegralHC
 {
-    Func * integrand = static_cast<Func *>(ptr_to_integrand);
-    (*integrand)(x, f);
-    return;
+public:
+    int ndim = ndim_in; 
+    Func * integrand; 
+    int ncomp;
+    double xmin[ndim_in];
+    double xmax[ndim_in];
+    double xlength[ndim_in];
+    double scale = 1.0;
+
+    IntegralHC(Func * integrand_init, int ncomp_init, 
+               double xmin_init[], double xmax_init[]) 
+    : integrand(integrand_init), ncomp(ncomp_init)
+    {
+        for (int index=0; index < ndim_in; ++index) 
+        {
+            xmin[index] = xmin_init[index];
+            xmax[index] = xmax_init[index];
+            xlength[index] = xmax[index] - xmin[index];
+            scale *= xlength[index];
+        }
+    }
+
+    void integrand_from_unitHC(const double in_unitHC[], double out[])
+    {
+        double physical_in[ndim_in]; 
+        for (int index=0; index < ndim_in; ++index)
+        {
+            physical_in[index] = 
+                xmin[index] + in_unitHC[index]*xlength[index];
+        }
+        (*integrand)(physical_in, out);
+    }
 };
 
 
-template<typename Func>
-void run_cuhre(Func * integrand, double rtol, double atol,
-               int verbosity, int mineval, int maxeval,
-               int &nregions, int &neval, int &fail,
-               double integral[], double error[])
+/*
+This is a function on the unit hypercube that follows cuda's integrand_t
+signiture.  It is passed a pointer to an IntegeralHC object which is
+used to evaluate the integrand and scale the argument from the unit 
+hypercube into the space expected by IntegralHC.integrand. 
+*/
+template<typename Func, int ndim>
+int cuba_dressed_integrand(const int *ndim_dummy,  // unused here
+                           const double input_unitHC[],
+                           const int *ncomp_dummy, // unused here
+                           double out[], void * ptr_to_IntegralHC)
 {
-    int ndim = integrand -> ndim;
-    int ncomp = integrand -> ncomp;
-    int nvec = 1;          // evaluates integrand one at a time
-    int flags = verbosity;  // 0 to 3
-    int key = 13;          // order of quadrature rule
-    char statefile[] = ""; // do not save the integration state to file
-    int spin_val = -1;     // handle threading automatically
-    double prob[ncomp];
+    IntegralHC<Func, ndim> * integral_definition = 
+        static_cast<IntegralHC<Func, ndim> *>(ptr_to_IntegralHC);
+    (integral_definition -> integrand_from_unitHC)(input_unitHC, out);
+    return 0;
+};
 
-    Cuhre(ndim, ncomp, &cuba_dressed_integrand, integrand, nvec,
-          rtol, atol, flags, mineval, maxeval, key,
+
+template<typename Func, int ndim>
+void run_cuhre(IntegralHC<Func, ndim> * integral_definition, 
+               double rtol, double atol, int verbosity, int mineval, 
+               int maxeval, int &nregions, int &neval, int &fail,
+               double result[], double error[])
+{
+    int ncomp = integral_definition -> ncomp;
+    int nvec = 1;           // evaluates integrand one at a time
+    int key = 7;            // use default order for quadrature rule
+    char statefile[] = "";  // do not save the integration state to file
+    int spin_val = -1;      // handle threading automatically
+    double prob[ncomp];
+    integrand_t integrand_wrapper = &cuba_dressed_integrand<Func, ndim>;
+    double scale = integral_definition -> scale;
+    Cuhre(ndim, ncomp, integrand_wrapper, integral_definition, 
+          nvec, rtol, atol/scale, verbosity, mineval, maxeval, key,
           statefile, &spin_val, &nregions, &neval, &fail,
-          integral, error, prob);
+          result, error, prob);
+    for (int index=0; index < ncomp; ++index)
+    {
+        result[index] *= scale;
+        error[index]  *= scale;
+    }
 };
 
 
