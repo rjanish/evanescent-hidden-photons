@@ -30,8 +30,9 @@ void linspace(double start, double end, size_t N, double samples[])
 
 
 int main(int argc, char* argv[]){
-    gsl_set_error_handler_off();
-    const gsl_integration_method method = adaptive_singular;
+    const int mineval = 1e3;
+    const int maxeval = 1e9;
+    const int verbosity = 0;
     const CylindricalUnitVector directions[3] = {r_hat, phi_hat, z_hat};
     const PropagatorType re_or_im[2] = {real, imaginary};
 
@@ -80,11 +81,12 @@ int main(int argc, char* argv[]){
             abort();
         }
         EffectiveCurrent J(radius, length, Ki_emitter, omega_func,
-                           atol, rtol, method);
+                           atol, rtol, mineval, maxeval, verbosity);
 
         // prep output file
         std::ofstream output_file(fmt::format("{}.out", param_filename));
-        input_params["omega"] = fmt::format("{:0.6e}", omega_func(radius, length));
+        input_params["omega"] = fmt::format("{:0.6e}", 
+                                            omega_func(radius, length));
         write_map(output_file, input_params);
         output_file << '\n';
         output_file << fmt::format("m    r    phi    z    "
@@ -117,7 +119,7 @@ int main(int argc, char* argv[]){
                                                            result, error);
                             }
                         }
-                        output_file << '\n';
+                        output_file << std::endl;
                     }
                 }
             }

@@ -12,17 +12,17 @@ typedef double (*VectorFieldInCylinder) (double, double, double, double,
 
 class OverlapIntegrand{
 public:
-    EffectiveCurrent j_eff;
+    PropagatedSurfaceCurrent mode;
     double Rd, Ld, seperation;
     VectorFieldInCylinder Edetect;
     double mass;
     PropagatorType re_or_im;
     double atol, rtol;
-    gsl_integration_method method;
+    int mineval, maxeval, verbosity;
     OverlapIntegrand(double, double, VectorFieldOnCylinder,
                      CylinderFrequency, double, double, double,
                      VectorFieldInCylinder, PropagatorType, double,
-                     double, double, gsl_integration_method);
+                     double, double, int, int, int);
     double operator() (double, double);
 };
 
@@ -31,10 +31,10 @@ class Overlap {
 public:
     OverlapIntegrand integrand;
     double atol, rtol;
-    gsl_integration_method method;
+    int mineval, maxeval, verbosity;
     Overlap(double, double, VectorFieldOnCylinder, CylinderFrequency,
             double, double, double, VectorFieldInCylinder,
-            double, double, gsl_integration_method);
+            double, double, int, int, int);
     double operator() (double);
 };
 

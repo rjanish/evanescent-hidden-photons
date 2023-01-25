@@ -114,9 +114,11 @@ EffectiveCurrent::EffectiveCurrent(double R_init, double L_init,
                                    VectorFieldOnCylinder Ki_emitter_init,
                                    CylinderFrequency omega_func_init,
                                    double atol_init, double rtol_init,
-                                   gsl_integration_method method_init)
+                                   int mineval_init, int maxeval_init,
+                                   int verbosity_init)
     : mode(R_init, L_init, Ki_emitter_init, omega_func_init),
-      atol(atol_init), rtol(rtol_init), method(method_init) {}
+      atol(atol_init), rtol(rtol_init), mineval(mineval_init), 
+      maxeval(maxeval_init), verbosity(verbosity_init) {}
 
 void EffectiveCurrent::operator()(double r0, double phi0, double z0,
                                   double m, PropagatorType re_or_im,
@@ -149,8 +151,8 @@ void EffectiveCurrent::operator()(double r0, double phi0, double z0,
     } else {
         mode.prop_type = re_or_im;
     }
-    integrate_over_cylinder<PropagatedSurfaceCurrent>(&mode, atol, rtol,
-                                                      method, result, error);
+    integrate_over_cylinder(&mode, atol, rtol, mineval, maxeval, 
+                            verbosity, result, error);
     result *= -m*m/(4*M_PI);
     error *= -m*m/(4*M_PI);
 }

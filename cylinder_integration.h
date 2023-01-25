@@ -2,7 +2,8 @@
 #ifndef CYLINDER_INTEGRATION_H
 #define CYLINDER_INTEGRATION_H
 
-// #include "integration.h"
+#include <gsl/gsl_math.h>
+
 #include "cuba_wrapper.h"
 
 /*
@@ -87,6 +88,50 @@ void integrate_over_cylinder(FuncOnCylinder * integrand,
     double side_uppers[] = {2*M_PI, L};
     IntegralHC<SideIntegrand<FuncOnCylinder>, 2>
         side_integral(&side_integrand, zero2, side_uppers);
+    double side[1], side_error[1];
+    run_cuhre(&side_integral, rtol, atol, verbosity, mineval, maxeval,
+              nregions, neval, fail, side, side_error);
+    
+    result = top[0] + bottom[0] + side[0];
+    error = gsl_hypot3(top_error[0], bottom_error[0], side_error[0]);
+}
+
+
+template<typename FuncOnCylinderXPlane> 
+void integrate_over_cylinderXplane(FuncOnCylinderXPlane * integrand, 
+                                   double atol, double rtol,
+                                   int mineval, int maxeval, int verbosity,
+                                   double &result, double &error)
+{
+    double Rs = integrand -> Rs;
+    double Ls = integrand -> Ls;
+    double Rd = integrand -> Rd;
+    double Ld = integrand -> Ld;
+    int nregions, neval, fail;
+    double zero4[] = {0.0, 0.0, 0.0, 0.0};
+
+    (*integrand).surface = top;
+    EndcapIntegrand<FuncOnCylinderXPlane> top_integrand(R, L, integrand);
+    double endcap_uppers[] = {Rd, 2*M_PI, Rd, Ld};
+    IntegralHC<EndcapIntegrand<FuncOnCylinderXPlane>, 4>
+        top_integral(&top_integrand, zero4, endcap_uppers);
+    double top[1], top_error[1];
+    run_cuhre(&top_integral, rtol, atol, verbosity, mineval, maxeval,
+              nregions, neval, fail, top, top_error);
+    
+    (*integrand).surface = bottom;
+    EndcapIntegrand<FuncOnCylinderXPlane> bottom_integrand(R, L, integrand);
+    IntegralHC<EndcapIntegrand<FuncOnCylinderXPlane>, 4>
+        bottom_integral(&bottom_integrand, zero4, endcap_uppers);
+    double bottom[1], bottom_error[1];
+    run_cuhre(&bottom_integral, rtol, atol, verbosity, mineval, maxeval,
+              nregions, neval, fail, bottom, bottom_error);
+
+    (*integrand).surface = side;
+    SideIntegrand<FuncOnCylinderXPlane> side_integrand(R, L, integrand);
+    double side_uppers[] = {2*M_PI, L, Rd, Ld};
+    IntegralHC<SideIntegrand<FuncOnCylinderXPlane>, 4>
+        side_integral(&side_integrand, zero4, side_uppers);
     double side[1], side_error[1];
     run_cuhre(&side_integral, rtol, atol, verbosity, mineval, maxeval,
               nregions, neval, fail, side, side_error);

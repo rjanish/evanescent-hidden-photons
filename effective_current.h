@@ -39,17 +39,16 @@ public:
                              VectorFieldOnCylinder,
                              CylinderFrequency);
     double Ki_detector(double, double, double);
-    double operator () (double, double);
+    double operator () (double[]);
 };
 
 class EffectiveCurrent {
 public:
     PropagatedSurfaceCurrent mode;
     double atol, rtol;
-    gsl_integration_method method;
-    EffectiveCurrent(double, double, VectorFieldOnCylinder,
-                     CylinderFrequency, double, double,
-                     gsl_integration_method);
+    int mineval, maxeval, verbosity;
+    EffectiveCurrent(double, double, VectorFieldOnCylinder, 
+                     CylinderFrequency, double, double, int, int, int);
     void operator () (double, double, double, double, PropagatorType,
                       CylindricalUnitVector, double &, double &);
 };

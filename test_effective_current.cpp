@@ -17,9 +17,11 @@ int main()
     auto L = 3.0;
     auto atol = 1e-12; 
     auto rtol = 1e-9; 
-    gsl_integration_method method = adaptive_singular;
+    int mineval = 1e3;
+    int maxeval = 1e9;
+    int verbosity = 0;
     EffectiveCurrent J(R, L, &Ki_cylinder_TE011, &angular_frequency_TE011, 
-                       atol, rtol, method);
+                       atol, rtol, mineval, maxeval, verbosity);
     auto r0 = 0.5;
     auto phi0 = 0.0;
     auto z0 = L + 1e-4;
