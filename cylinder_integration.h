@@ -2,7 +2,8 @@
 #ifndef CYLINDER_INTEGRATION_H
 #define CYLINDER_INTEGRATION_H
 
-#include "integration.h"
+// #include "integration.h"
+#include "cuba_wrapper.h"
 
 /*
 Map integrand functors (double, double) --> double to new functors of 
@@ -14,10 +15,13 @@ public:
     double L;
     double R;
     Func2D * f_endcap;
+
     EndcapIntegrand(double R_init, double L_init, Func2D * f_init) :
       L(L_init), R(R_init), f_endcap(f_init) {}
-    double operator () (double r, double phi){
-        return r*(*f_endcap)(r, phi);
+    
+    double operator () (double x[]) // x = {r, phi}
+    { 
+        return x[0]*(*f_endcap)(x);
     }
 };
 
@@ -27,10 +31,12 @@ public:
     double L;
     double R;
     Func2D * f_side;
+
     SideIntegrand(double R_init, double L_init, Func2D * f_init) :
       L(L_init), R(R_init), f_side(f_init) {}
-    double operator () (double phi, double z){
-        return R*(*f_side)(phi, z);
+    
+    double operator () (double x[]){ // x = {phi, z}
+        return R*(*f_side)(x);
     }
 };
 
@@ -51,35 +57,42 @@ enum Surface {top, bottom, side,};
 template<typename FuncOnCylinder> 
 void integrate_over_cylinder(FuncOnCylinder * integrand, 
                              double atol, double rtol,
-                             gsl_integration_method method,
+                             int mineval, int maxeval, int verbosity,
                              double &result, double &error)
 {
     double R = integrand -> R;
     double L = integrand -> L;
+    int nregions, neval, fail;
+    double zero2[] = {0.0, 0.0};
 
     (*integrand).surface = top;
     EndcapIntegrand<FuncOnCylinder> top_integrand(R, L, integrand);
-    double top, top_error;
-    integrate_over_2d_box(&top_integrand, 
-                          0.0, R, 0.0, 2*M_PI, 
-                          atol, rtol, method, top, top_error);
+    double endcap_uppers[] = {R, 2*M_PI};
+    IntegralHC<EndcapIntegrand<FuncOnCylinder>, 2>
+        top_integral(&top_integrand, zero2, endcap_uppers);
+    double top[1], top_error[1];
+    run_cuhre(&top_integral, rtol, atol, verbosity, mineval, maxeval,
+              nregions, neval, fail, top, top_error);
     
     (*integrand).surface = bottom;
     EndcapIntegrand<FuncOnCylinder> bottom_integrand(R, L, integrand);
-    double bottom, bottom_error;
-    integrate_over_2d_box(&bottom_integrand, 
-                          0.0, R, 0.0, 2*M_PI, 
-                           atol, rtol, method, bottom, bottom_error);
+    IntegralHC<EndcapIntegrand<FuncOnCylinder>, 2>
+        bottom_integral(&bottom_integrand, zero2, endcap_uppers);
+    double bottom[1], bottom_error[1];
+    run_cuhre(&bottom_integral, rtol, atol, verbosity, mineval, maxeval,
+              nregions, neval, fail, bottom, bottom_error);
 
     (*integrand).surface = side;
     SideIntegrand<FuncOnCylinder> side_integrand(R, L, integrand);
-    double side, side_error;
-    integrate_over_2d_box(&side_integrand,
-                          0.0, 2*M_PI, 0.0, L,
-                          atol, rtol, method, side, side_error);
+    double side_uppers[] = {2*M_PI, L};
+    IntegralHC<SideIntegrand<FuncOnCylinder>, 2>
+        side_integral(&side_integrand, zero2, side_uppers);
+    double side[1], side_error[1];
+    run_cuhre(&side_integral, rtol, atol, verbosity, mineval, maxeval,
+              nregions, neval, fail, side, side_error);
     
-    result = top + bottom + side;
-    error = gsl_hypot3(top_error, bottom_error, side_error);
+    result = top[0] + bottom[0] + side[0];
+    error = gsl_hypot3(top_error[0], bottom_error[0], side_error[0]);
 }
 
 

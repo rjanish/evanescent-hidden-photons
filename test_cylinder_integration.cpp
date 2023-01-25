@@ -2,11 +2,14 @@
 Test my wrappers for the numerical integration routines of GSL 
 */
 
-#include <stdio.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+
 #include <gsl/gsl_math.h>
-#include <gsl/gsl_integration.h>
 #include <gsl/gsl_sf_trig.h>
 #include <gsl/gsl_sf_exp.h>
+#include <fmt/format.h>
 
 #include "cylinder_integration.h"
 
@@ -22,10 +25,13 @@ public:
     double R;
     double L;
     Surface surface;
+
     Unit2D(double R_init, double L_init) : R(R_init), L(L_init) {}
-    double operator () (double x, double y){
+    
+    double operator () (double x[]){
         return 1.0;
     }
+    
     double exact_surface_area()
     {
         return 2.0*M_PI*R*R + L*2*M_PI*R;
@@ -62,15 +68,15 @@ public:
                gsl_sf_sin(M_PI*M_PI)/((1.0-M_PI*M_PI)*M_PI*M_PI);
     }    
 
-    double operator () (double x1, double x2)
+    double operator () (double x[])
     {
         switch (surface){
         case top:
-            return bulk(x1, x2, L);
+            return bulk(x[0], x[1], L);
         case bottom:
-            return bulk(x1, x2, 0.0);
+            return bulk(x[0], x[1], 0.0);
         case side:
-            return bulk(R, x1, x2);
+            return bulk(R, x[0], x[1]);
         }
         abort();
     }
@@ -83,53 +89,53 @@ public:
 int main (void)
 {
 
-  printf("\n ----------------- test surface area ----------------- \n");
-  double L = 10.0*M_PI;
-  double R = 2.0*pow(2, 0.5);
-  Unit2D unit(R, L);
+    double atol = 1e-12; 
+    double rtol = 1e-9; 
+    int mineval = 1e3;
+    int maxeval = 1e9;
+    int verbosity = 0;
 
-  double actual = unit.exact_surface_area();
-  double result, error;
-  double atol = 1e-12; 
-  double rtol = 1e-9; 
-  integrate_over_cylinder<Unit2D>(&unit, atol, rtol, romberg, result, error);
-  printf("romberg   = %f +- %e\n", result, error);
-  printf("exact     = %f \n", actual);
-  printf("diff      = %e +- %e\n\n", result - actual, error);
-  integrate_over_cylinder<Unit2D>(&unit, atol, rtol, adaptive_singular, 
-                                  result, error);
-  printf("qags      = %f +- %e\n", result, error);
-  printf("exact     = %f \n", actual);
-  printf("diff      = %e +- %e\n", result - actual, error);
+    std::cout << 
+        "\n ----------------- test surface area ----------------- \n" 
+              << std::endl;
+    double L = 10.0*M_PI;
+    double R = 2.0*pow(2, 0.5);
+    Unit2D unit(R, L);
+    double result, error;
+    integrate_over_cylinder(&unit, atol, rtol, mineval, maxeval, 
+                            verbosity, result, error);
+    double actual = unit.exact_surface_area();
+    std::cout << fmt::format("cuda      = {:f} +- {:e}\n", result, error)
+              << fmt::format("exact     = {:f} \n", actual)
+              << fmt::format("diff      = {:e} +- {:e}\n", 
+                             result - actual, error) 
+              << std::endl;
 
 
-  printf("\n\n ----------------- test mixed cosine exp ----------------- \n");
+  std::cout << 
+    "\n ----------------- test mixed cosine exp ----------------- \n"
+            << std::endl;
   double k = -11.0;
   MixedCosExp cos_exp(L, R, k);
-  integrate_over_cylinder<MixedCosExp>(&cos_exp, atol, rtol, 
-                                       romberg, result, error);
+  integrate_over_cylinder(&cos_exp, atol, rtol, mineval, maxeval, 
+                          verbosity, result, error);
   actual = cos_exp.exact_suface_integral();
-  printf("\nk = %f\n", k);
-  printf("\tromberg   = %e +- %e\n", result, error);
-  printf("\texact     = %e \n", actual);
-  printf("\tdiff      = %e +- %e\n\n", result - actual, error);
-  integrate_over_cylinder<MixedCosExp>(&cos_exp, atol, rtol, 
-                                       adaptive_singular, result, error);
-  printf("\tqags      = %e +- %e\n", result, error);
-  printf("\texact     = %e \n", actual);
-  printf("\tdiff      = %e +- %e\n", result - actual, error);
+  std::cout << fmt::format("\nk = {:f}\n", k)
+            << fmt::format("  cuda   = {:e} +- {:e}\n", result, error)
+            << fmt::format("  exact     = {:e} \n", actual)
+            << fmt::format("  diff      = {:e} +- {:e}\n", 
+                           result - actual, error)
+            << std::endl;
 
   k = M_PI*M_PI*2;
   cos_exp.k = k;
-  integrate_over_cylinder<MixedCosExp>(&cos_exp, atol, rtol, romberg, result, error);
+  integrate_over_cylinder(&cos_exp, atol, rtol, mineval, maxeval, 
+                          verbosity, result, error);
   actual = cos_exp.exact_suface_integral();
-  printf("\nk = %f\n", k);
-  printf("\tromberg   = %e +- %e\n", result, error);
-  printf("\texact     = %e \n", actual);
-  printf("\tdiff      = %e +- %e\n\n", result - actual, error);
-  integrate_over_cylinder<MixedCosExp>(&cos_exp, atol, rtol, 
-                                       adaptive_singular, result, error);
-  printf("\tqags      = %e +- %e\n", result, error);
-  printf("\texact     = %e \n", actual);
-  printf("\tdiff      = %e +- %e\n", result - actual, error);
+  std::cout << fmt::format("\nk = {:f}\n", k)
+            << fmt::format("  cuda   = {:e} +- {:e}\n", result, error)
+            << fmt::format("  exact     = {:e} \n", actual)
+            << fmt::format("  diff      = {:e} +- {:e}\n", 
+                           result - actual, error)
+            << std::endl;
 }

@@ -80,24 +80,24 @@ double PropagatedSurfaceCurrent::Ki_detector(double x1, double x2, double phi)
     abort();
 }
 
-double PropagatedSurfaceCurrent::operator () (double x1, double x2)
+double PropagatedSurfaceCurrent::operator () (double x[])
 {
     double r, phi, z;
     switch (surface) {
     case top:
-        r = x1;
-        phi = x2;
+        r = x[0];
+        phi = x[1];
         z = L;
         break;
     case bottom:
-        r = x1;
-        phi = x2;
+        r = x[0];
+        phi = x[1];
         z = 0.0;
         break;
     case side:
         r = R;
-        phi = x1;
-        z = x2;
+        phi = x[0];
+        z = x[1];
         break;
     default:
         std::cerr << "invalid unit vector" << std::endl;
@@ -105,7 +105,7 @@ double PropagatedSurfaceCurrent::operator () (double x1, double x2)
     }
     double q = wavenumber(omega_func(R, L), m);
     double prop = propagator(r, phi, z, r0, phi0, z0, q, prop_type);
-    double Kid = Ki_detector(x1, x2, phi);
+    double Kid = Ki_detector(x[0], x[1], phi);
     return prop*Kid;
 }
 

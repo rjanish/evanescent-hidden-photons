@@ -18,15 +18,13 @@ class IntegralHC
 public:
     int ndim = ndim_in; 
     Func * integrand; 
-    int ncomp;
     double xmin[ndim_in];
     double xmax[ndim_in];
     double xlength[ndim_in];
     double scale = 1.0;
 
-    IntegralHC(Func * integrand_init, int ncomp_init, 
-               double xmin_init[], double xmax_init[]) 
-    : integrand(integrand_init), ncomp(ncomp_init)
+    IntegralHC(Func * integrand_init, double xmin_init[], double xmax_init[]) 
+    : integrand(integrand_init)
     {
         for (int index=0; index < ndim_in; ++index) 
         {
@@ -39,13 +37,13 @@ public:
 
     void integrand_from_unitHC(const double in_unitHC[], double out[])
     {
-        double physical_in[ndim_in]; 
+        double in_physical[ndim_in]; 
         for (int index=0; index < ndim_in; ++index)
         {
-            physical_in[index] = 
+            in_physical[index] = 
                 xmin[index] + in_unitHC[index]*xlength[index];
         }
-        (*integrand)(physical_in, out);
+        out[0] = (*integrand)(in_physical);
     }
 };
 
@@ -75,7 +73,7 @@ void run_cuhre(IntegralHC<Func, ndim> * integral_definition,
                int maxeval, int &nregions, int &neval, int &fail,
                double result[], double error[])
 {
-    int ncomp = integral_definition -> ncomp;
+    int ncomp = 1;  // only run one component at a time for now
     int nvec = 1;           // evaluates integrand one at a time
     int key = 7;            // use default order for quadrature rule
     char statefile[] = "";  // do not save the integration state to file
