@@ -57,23 +57,37 @@ Overlap::Overlap(double Rs_init, double Ls_init,
 
 double Overlap::operator()(double mass)
 {
+    const double factor = 50.0;
+
     integrand.mass = mass;
     const PropagatorType re_or_im[2] = {real, imaginary};
+
+    auto omega = integrand.j_eff.mode.omega_func(integrand.Rd, integrand.Ld);
+    double L_upper;
+    if (mass > omega)
+    {
+        double range = factor/wavenumber(mass, omega);
+        L_upper = GSL_MIN(integrand.Ld, range);
+    }
+    else
+    {
+        L_upper = integrand.Ld;
+    }
+
     double overlap_sq = 0.0;
     for(auto &complex_part : re_or_im){
         integrand.re_or_im = complex_part;
         double result, error;
         integrate_over_2d_box(&integrand,
                               0.0, integrand.Rd,
-                              0.0, integrand.Ld,
+                              0.0, L_upper,
                               atol, rtol, method, result, error);
-        overlap_sq += result*result; 
+        overlap_sq += result*result;
             // integral over r and z, assuming integrand is independent of phi
     }
     auto volume = M_PI*integrand.Rd*integrand.Rd*integrand.Ld;
-    auto omega = integrand.j_eff.mode.omega_func(integrand.Rd, integrand.Ld);
     auto scale = mass*gsl_sf_exp(mass*integrand.seperation)/sqrt(omega*volume);
-     // This normalization make the overlap factor unitless and inpedendent of m 
+     // This normalization make the overlap factor unitless and inpedendent of m
      // for large m, and removed the overall exponential gap scaling. See paper.
     return scale*2*M_PI*sqrt(overlap_sq); // 2pi for assumed phi integral
 }

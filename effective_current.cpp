@@ -13,18 +13,6 @@
 #include "effective_current.h"
 
 
-double wavenumber(double omega, double m)
-{
-  if (m > omega){
-    return sqrt(m*m - omega*omega);
-  }
-  else{
-    return sqrt(omega*omega - m*m);
-  }
-  abort();
-}
-
-
 double propagator(double r, double phi, double z,
                   double r0, double phi0, double z0,
                   double q, PropagatorType prop_type)

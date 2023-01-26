@@ -48,7 +48,7 @@ def plot_overviews(output_files, prefix=""):
                     abs_max = np.abs(j[np.isfinite(j)]).max()
                     cplot = ax.pcolor(zs, xs, j, cmap="seismic",
                                       vmin=-abs_max, vmax=abs_max)
-                    ax.set_aspect("equal")
+                    # ax.set_aspect("equal")
                     divider = make_axes_locatable(ax)
                     cax = divider.append_axes("right", size="5%", pad=0.05)
                     fig.colorbar(cplot, cax=cax)
@@ -148,15 +148,20 @@ if __name__ == "__main__":
                     "testparity-right-TM010.in.out",
                     "testparity-right-TE011.in.out"]
 
+    # print("\n" + "-"*40 +"\nplotting j_eff...")
+    # plot_overviews(nearfield_tests,
+    #                prefix="check-nearfield-")
+    # plot_overviews(farfield_tests,
+    #                prefix="check-farfield-")
+
+    # print("\n" + "-"*40 +"\ncheck for phi-independence")
+    # check_angular_dependence(nearfield_tests, prefix="check-nearfield-")
+
+    # print("\n" + "-"*40 +"\ncheck for parity about center of cavity")
+    # check_parity(parity_tests, prefix="testparity-")
+
+
+    panckake_test = ["check-nearfield-TE011pancake.in.out"]
     print("\n" + "-"*40 +"\nplotting j_eff...")
-    plot_overviews(nearfield_tests,
+    plot_overviews(panckake_test,
                    prefix="check-nearfield-")
-    plot_overviews(farfield_tests,
-                   prefix="check-farfield-")
-
-    print("\n" + "-"*40 +"\ncheck for phi-independence")
-    check_angular_dependence(nearfield_tests, prefix="check-nearfield-")
-
-    print("\n" + "-"*40 +"\ncheck for parity about center of cavity")
-    check_parity(parity_tests, prefix="testparity-")
-

@@ -4,10 +4,14 @@
 
 #include "cylinder_integration.h"
 
+
 /* angular frequency of modes */
+double wavenumber(double, double);
+
 double angular_frequency_TM010(double, double);
 
 double angular_frequency_TE011(double, double);
+
 
 /*
 Surface current in cylindrical components relative to the (passed)
@@ -23,6 +27,7 @@ double Ki_cylinder_TM010(double, double, double, double,
 
 double Ki_cylinder_TE011(double, double, double, double,
                          Surface, CylindricalUnitVector);
+
 
 /*
 E field mode in a cylinder cavity, evaluated by cylinder coordinates

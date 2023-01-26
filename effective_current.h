@@ -12,7 +12,6 @@
 #include "effective_current.h"
 
 
-double wavenumber(double omega, double m);
 
 enum PropagatorType {real, imaginary, evanescent,};
 

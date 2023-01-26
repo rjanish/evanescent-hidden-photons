@@ -8,8 +8,19 @@
 #include "cylinder_modes.h"
 
 
-/********************* TM010 ****************************************/
+double wavenumber(double omega, double m)
+{
+  if (m > omega){
+    return sqrt(m*m - omega*omega);
+  }
+  else{
+    return sqrt(omega*omega - m*m);
+  }
+  abort();
+}
 
+
+/********************* TM010 ****************************************/
 
 double angular_frequency_TM010(double R, double L)
 {
@@ -80,7 +91,6 @@ double Ei_cylinder_TM010(double r, double phi, double z,
 
 
 /********************* TE011 ****************************************/
-
 
 double angular_frequency_TE011(double R, double L)
 {

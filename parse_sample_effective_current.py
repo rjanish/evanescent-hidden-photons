@@ -3,14 +3,14 @@
 import numpy as np
 
 
-def parse_header_plus_array(filenames, param_types, prefix="", jump=0): 
+def parse_header_plus_array(filenames, param_types, prefix="", jump=0):
     """
     Parse data file with header composed of key-value pairs, each on a single line
-    and whitespace seperated, followed by a data array.  Input is a list of 
-    filenames, a dict of header key names and associated datatype.  Output is 
+    and whitespace seperated, followed by a data array.  Input is a list of
+    filenames, a dict of header key names and associated datatype.  Output is
     a dict of processed data, keyed first by filename (striped of prefix and extenstion)
     and then by param name and 'rawdata' containing the data array. jump is the
-    number of rows after the end of the header at which the data array starts.  
+    number of rows after the end of the header at which the data array starts.
     """
     num_params = len(param_types)
     num_header_lines = num_params + jump
@@ -20,13 +20,15 @@ def parse_header_plus_array(filenames, param_types, prefix="", jump=0):
     if isinstance(filenames, str):
         filenames = [filenames] # handle single string filename input
     runs = {}
-    for filename in filenames: 
+    for filename in filenames:
         label = filename.split('.')[0][len(prefix):] # remove prefix and file ext
         runs[label] = {}
         with open(filename) as file:
             for i in range(num_params):
-                key, value = next(file).split()
-                runs[label][key] = param_types[key](value)
+                line = next(file).split("#")[0].strip()
+                if line:
+                    key, value = line.split()
+                    runs[label][key] = param_types[key](value)
         runs[label]["rawdata"] = np.loadtxt(filename, skiprows=num_header_lines)
     return runs
 
@@ -38,7 +40,7 @@ def read_effective_current_output(filenames, prefix=""):
     param_types = {"r_N"  :int, "r_start"  :float, "r_end"  :float,
                    "phi_N":int, "phi_start":float, "phi_end":float,
                    "z_N"  :int, "z_start"  :float, "z_end":float,
-                   "m_N"  :int, "m_start"  :float, "m_end":float, 
+                   "m_N"  :int, "m_start"  :float, "m_end":float,
                    "length":float, "radius":float, "omega":float, "mode":str,
                    "atol":float, "rtol":float,}
     column_names = ["m", "r", "phi", "z",
@@ -74,13 +76,13 @@ def read_effective_current_output(filenames, prefix=""):
             runs[label]["im_jphi"]**2 + runs[label]["re_jphi"]**2 +
             runs[label]["im_jz"]**2   + runs[label]["re_jz"]**2)
     return runs
-    
+
 
 def read_overlap_output(filenames, prefix=""):
     """ read output files of sample_overlap """
-    param_types = {"Rs":float, "Ls":float, "mode_s":str, 
-                   "Rd":float, "Ld":float, "mode_d":str, 
-                   "omega":float, "sep":float, 
-                   "m_start":float, "m_end":float,  "m_N":int, 
+    param_types = {"Rs":float, "Ls":float, "mode_s":str,
+                   "Rd":float, "Ld":float, "mode_d":str,
+                   "omega":float, "sep":float,
+                   "m_start":float, "m_end":float,  "m_N":int,
                    "atol":float, "rtol":float}
     return parse_header_plus_array(filenames, param_types, prefix, jump=4)
