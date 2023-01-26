@@ -117,7 +117,7 @@ int main(int argc, char* argv[]){
                                                            result, error);
                             }
                         }
-                        output_file << '\n';
+                        output_file << std::endl;
                     }
                 }
             }

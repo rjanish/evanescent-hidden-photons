@@ -82,7 +82,7 @@ int main(int argc, char* argv[]){
             std::cout << fmt::format("{}/{}:  m = {}", index+1, m_N, mass)
                       << std::endl;
             result = overlap(mass);
-            output_file << fmt::format("{}  {}\n", mass, result);
+            output_file << fmt::format("{}  {}", mass, result) << std::endl;
         }
     }
     return 0;
