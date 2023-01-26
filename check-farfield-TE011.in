@@ -25,5 +25,5 @@ z_start     100
 z_end       103
 z_N         41
 
-atol        1e-9
-rtol        1e-6
+atol        1e-5
+rtol        1e-3

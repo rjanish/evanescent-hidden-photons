@@ -17,13 +17,14 @@ public:
     VectorFieldInCylinder Edetect;
     double mass;
     PropagatorType re_or_im;
+    Surface surface;
     double atol, rtol;
     int mineval, maxeval, verbosity;
     OverlapIntegrand(double, double, VectorFieldOnCylinder,
                      CylinderFrequency, double, double, double,
-                     VectorFieldInCylinder, PropagatorType, double,
-                     double, double, int, int, int);
-    double operator() (double, double);
+                     VectorFieldInCylinder, PropagatorType, Surface, 
+                     double, double, double, int, int, int);
+    double operator() (double[]);
 };
 
 

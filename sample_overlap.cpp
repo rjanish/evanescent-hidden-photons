@@ -16,8 +16,9 @@
 int main(int argc, char* argv[]){
 
     // fixed parameters
-    const gsl_integration_method method = adaptive_singular;
-    gsl_set_error_handler_off();
+    const int mineval = 1e3;
+    const int maxeval = 1e9;
+    const int verbosity = 0;
 
     // process each param file
     for (int file_number = 1; file_number < argc; ++file_number){
@@ -65,8 +66,8 @@ int main(int argc, char* argv[]){
             abort();
         }
 
-        Overlap overlap(Rs, Ls, Ki_emitter, omega_func,
-                        Rd, Ld, sep, Edetect, atol, rtol, method);
+        Overlap overlap(Rs, Ls, Ki_emitter, omega_func, Rd, Ld, sep, 
+                        Edetect, atol, rtol, mineval, maxeval, verbosity);
 
         // prep output file
         std::ofstream output_file(fmt::format("{}.out", param_filename));
@@ -82,7 +83,7 @@ int main(int argc, char* argv[]){
             std::cout << fmt::format("{}/{}:  m = {}", index+1, m_N, mass)
                       << std::endl;
             result = overlap(mass);
-            output_file << fmt::format("{}  {}\n", mass, result);
+            output_file << fmt::format("{}  {}", mass, result) << std::endl;
         }
     }
     return 0;

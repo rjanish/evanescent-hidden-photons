@@ -26,5 +26,5 @@ z_start     -3.5
 z_end       0.5000001  # avoid sampling exactly on cavity boundary
 z_N         41
 
-atol        1e-9
-rtol        1e-6
+atol        1e-5
+rtol        1e-3

@@ -103,16 +103,17 @@ void integrate_over_cylinderXplane(FuncOnCylinderXPlane * integrand,
                                    int mineval, int maxeval, int verbosity,
                                    double &result, double &error)
 {
-    double Rs = integrand -> Rs;
-    double Ls = integrand -> Ls;
+    double Rs = (integrand -> mode).R;
+    double Ls = (integrand -> mode).L;
     double Rd = integrand -> Rd;
     double Ld = integrand -> Ld;
+    double upper_length = GSL_MIN_DBL(2.0/(integrand -> mass), Ld);
     int nregions, neval, fail;
     double zero4[] = {0.0, 0.0, 0.0, 0.0};
 
     (*integrand).surface = top;
-    EndcapIntegrand<FuncOnCylinderXPlane> top_integrand(R, L, integrand);
-    double endcap_uppers[] = {Rd, 2*M_PI, Rd, Ld};
+    EndcapIntegrand<FuncOnCylinderXPlane> top_integrand(Rs, Ls, integrand);
+    double endcap_uppers[] = {Rd, 2*M_PI, Rd, upper_length};
     IntegralHC<EndcapIntegrand<FuncOnCylinderXPlane>, 4>
         top_integral(&top_integrand, zero4, endcap_uppers);
     double top[1], top_error[1];
@@ -120,7 +121,7 @@ void integrate_over_cylinderXplane(FuncOnCylinderXPlane * integrand,
               nregions, neval, fail, top, top_error);
     
     (*integrand).surface = bottom;
-    EndcapIntegrand<FuncOnCylinderXPlane> bottom_integrand(R, L, integrand);
+    EndcapIntegrand<FuncOnCylinderXPlane> bottom_integrand(Rs, Ls, integrand);
     IntegralHC<EndcapIntegrand<FuncOnCylinderXPlane>, 4>
         bottom_integral(&bottom_integrand, zero4, endcap_uppers);
     double bottom[1], bottom_error[1];
@@ -128,8 +129,8 @@ void integrate_over_cylinderXplane(FuncOnCylinderXPlane * integrand,
               nregions, neval, fail, bottom, bottom_error);
 
     (*integrand).surface = side;
-    SideIntegrand<FuncOnCylinderXPlane> side_integrand(R, L, integrand);
-    double side_uppers[] = {2*M_PI, L, Rd, Ld};
+    SideIntegrand<FuncOnCylinderXPlane> side_integrand(Rs, Ls, integrand);
+    double side_uppers[] = {2*M_PI, Ls, Rd, upper_length};
     IntegralHC<SideIntegrand<FuncOnCylinderXPlane>, 4>
         side_integral(&side_integrand, zero4, side_uppers);
     double side[1], side_error[1];

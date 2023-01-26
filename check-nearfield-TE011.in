@@ -16,17 +16,15 @@ m_N         2
 
 r_start     0.0
 r_end       1.5000001  # avoid sampling exactly on cavity boundary
-r_N         10
+r_N         41
 
 phi_start   0.0  # in units of 2pi
-#phi_end     1.0
-# phi_N       7
-phi_end     0.0
-phi_N       1
+phi_end     1.0
+phi_N       7
 
 z_start     -3.5
 z_end       0.5000001  # avoid sampling exactly on cavity boundary
-z_N         10
+z_N         41
 
-atol        1e-9
-rtol        1e-6
+atol        1e-5
+rtol        1e-3
