@@ -1,0 +1,20 @@
+# overlap integral as a function of m spanning propagating and
+# evanescent values, to check expected power-law scalings
+
+Rs            10.0 #cm  [R/L = 20]
+Ls            0.5  #cm
+mode_s        TE011
+
+Rd            10.0 #cm
+Ld            0.5  #cm
+mode_d        TE011
+
+sep           1e-3 #cm, gap between cavities
+
+# frequency of TE011 R=10, L=0.5 is 6.29
+m_start     0.6    #cm^-1
+m_end       65    #cm^-1
+m_N         2
+
+atol          1e-4
+rtol          1e-3
