@@ -12,9 +12,9 @@ mode_d        TE011
 sep           1e-3 #cm, gap between cavities
 
 # frequency of TE011 R=15, L=0.3 is 10.5
-m_start     10.6    #cm^-1
-m_end       12    #cm^-1
-m_N         10
+m_start     0.5    #cm^-1
+m_end       120    #cm^-1
+m_N         60
 
-atol          1e-6
+atol          1e-5
 rtol          1e-3

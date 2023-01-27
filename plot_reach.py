@@ -79,7 +79,8 @@ def plot_reach_from_overlap(results, Bin_T, tint_sec, T_K, Qrec, snr, prefix="",
         reach = epsilon_reach(Bin_T, tint_sec, T_K, Qrec, filename, prefix)
         numeric_reaches = reach.numeric(reach.m_cm_numeric, reach.eta_numeric)*(snr**0.25)
         ax.loglog(reach.m_cm_numeric/eV_cm(), numeric_reaches,
-                  marker='', linestyle='-', alpha=0.6, color=color[color_index])
+                  marker='', linestyle='-', linewidth=1.5, 
+                  alpha=0.6, color=color[color_index])
         m_ev_limits = np.array([1e-11, 1e2])
         Nextrap = 3
         m_cm_limits = m_ev_limits*eV_cm()
@@ -87,12 +88,14 @@ def plot_reach_from_overlap(results, Bin_T, tint_sec, T_K, Qrec, snr, prefix="",
                                 np.log10(reach.left_m_cm_numeric[0]),
                                 Nextrap*int(np.log10(reach.left_m_cm_numeric[0]/m_cm_limits[0])))
         ax.loglog(m_left_cm/eV_cm(), reach.left(m_left_cm)*(snr**0.25),
-                  marker='.', linestyle='--', alpha=0.4, color=color[color_index])
+                  marker='', linestyle='--', alpha=0.4, color=color[color_index],
+                  linewidth=1.5)
         m_right_cm = np.logspace(np.log10(reach.right_m_cm_numeric[1]),
                                  np.log10(m_cm_limits[1]),
                                  Nextrap*int(np.log10(m_cm_limits[1]/reach.left_m_cm_numeric[1])))
         ax.loglog(m_right_cm/eV_cm(), reach.right(m_right_cm)*(snr**0.25),
-                  marker='.', linestyle='--', alpha=0.4, color=color[color_index])
+                  marker='', linestyle='--', alpha=0.4, color=color[color_index],
+                  linewidth=1.5)
         ax.axvline(reach.omega/eV_cm(), color=color[color_index],
                    linestyle='dotted', alpha=0.3)
         mins.append(numeric_reaches.min())
@@ -103,12 +106,13 @@ def plot_reach_from_overlap(results, Bin_T, tint_sec, T_K, Qrec, snr, prefix="",
     ax.set_xlim(m_ev_limits)
     ax.set_ylim([0.1*min(mins), 1])
     fig.savefig("{}{}-reach.png".format(prefix, name), dpi=160)
+    # plt.show()
     plt.close(fig)
 
 
 if __name__ == "__main__":
-    eta_files = ["reachplot-TE011pancake-24HOUR.in.out",
-                 "reachplot-TE011pancake50.in.out",
+    eta_files = [#"reachplot-TE011pancake-24HOUR.in.out",
+                 "reachplot-TE011pancake50_custom.out",
                  "reachplot-TE011equal.in.out"]
     # eta_prefix = "checkoverlap-"
     # Bin_T = 0.05
