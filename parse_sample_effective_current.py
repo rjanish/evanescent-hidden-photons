@@ -60,6 +60,7 @@ def read_effective_current_output(filenames, prefix=""):
         for num, name in enumerate(column_names):
             runs[label][name] = (
                 runs[label]["rawdata"][:, num].reshape(shape_4d))
+
                 # put data in meshgrid format
 
         # construct other coordinates and values

@@ -5,16 +5,16 @@
 mode        TE011
 
 radius      1.0
-length      3.0
+length      1.0
 
-# frequency of TE011 R=1 L=3 is 3.972228
-m_start     0.3972228
-m_end       397.2228
-m_N         10
+# frequency of TE011 R=1 L=1 is 4.954955
+m_start     2.47748   # 0.5*omega
+m_end       9.90991   # 2*omega
+m_N         2
 
 r_start     0.0
 r_end       1.0000001
-r_N         24
+r_N         100
 
 phi_start   0.0
 phi_end     0.0
