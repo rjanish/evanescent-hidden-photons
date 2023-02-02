@@ -78,6 +78,49 @@ def read_effective_current_output(filenames, prefix=""):
             runs[label]["im_jz"]**2   + runs[label]["re_jz"]**2)
     return runs
 
+def read_OLD_effective_current_output(filenames, prefix=""):
+    """ read output files of sample_effective_current """
+
+    # param file format assumptions
+    param_types = {"r_N"  :int, "r_min"  :float, "r_max"  :float,
+                   "phi_N":int, "phi_min":float, "phi_max":float,
+                   "z_N"  :int, "z_min"  :float, "z_max":float,
+                   "mass"  :float,
+                   "length":float, "radius":float, "mode":str,
+                   "atol":float, "rtol":float,}
+    column_names = ["r", "phi", "z",
+                    "re_jr", "error_re_jr", "im_jr", "error_im_jr",
+                    "re_jphi", "error_re_jphi", "im_jphi", "error_im_jphi",
+                    "re_jz", "error_re_jz", "im_jz", "error_im_jz"]
+
+    runs = parse_header_plus_array(filenames, param_types, prefix, jump=4)
+    for filename in filenames: # assumes a list of filenames
+        label = filename.split('.')[0][len(prefix):] # remove prefix and file ext
+        # process data
+        shape_3d = (runs[label]["r_N"],
+                    runs[label]["phi_N"],
+                    runs[label]["z_N"])
+                       # this is the order of data columns in the file
+        for num, name in enumerate(column_names):
+            runs[label][name] = (
+                runs[label]["rawdata"][:, num].reshape(shape_3d))
+
+                # put data in meshgrid format
+
+        # construct other coordinates and values
+        runs[label]["x"] = runs[label]["r"]*np.cos(runs[label]["phi"])
+        runs[label]["y"] = runs[label]["r"]*np.sin(runs[label]["phi"])
+        runs[label]["mag_jr"]   = np.sqrt(
+            runs[label]["re_jr"]**2   + runs[label]["im_jr"]**2)
+        runs[label]["mag_jphi"] = np.sqrt(
+            runs[label]["re_jphi"]**2 + runs[label]["im_jphi"]**2)
+        runs[label]["mag_jz"]   = np.sqrt(
+            runs[label]["re_jz"]**2   + runs[label]["im_jz"]**2)
+        runs[label]["jtotal"]   = np.sqrt(
+            runs[label]["im_jr"]**2   + runs[label]["re_jr"]**2 +
+            runs[label]["im_jphi"]**2 + runs[label]["re_jphi"]**2 +
+            runs[label]["im_jz"]**2   + runs[label]["re_jz"]**2)
+    return runs
 
 def read_overlap_output(filenames, prefix=""):
     """ read output files of sample_overlap """

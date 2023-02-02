@@ -49,7 +49,7 @@ def alps2_projection(m_eV):
 class epsilon_reach():
     def __init__(self, setup):
         self.overall_scale = 4.907e-9  # see paper and mathematica
-        self.Bin_T = setup["Bin_T"]
+        self.Bin_volRMS_T = setup["Bin_volRMS_T"]
         self.tint_sec = setup["tint_sec"]
         self.T_K = setup["T_K"]
         self.Qrec = setup["Qrec"]
@@ -82,12 +82,12 @@ class epsilon_reach():
             scale = 4.907e-9  # see paper and mathematica
             return (scale*np.exp(0.5*m_cm*self.d_cm)*
                     (self.T_K/(self.Qrec*self.tint_sec))**(0.25)*
-                    (m_cm/(self.Bin_T*eta))**(0.5))
+                    (m_cm/(self.Bin_volRMS_T*eta))**(0.5))
         if self.readout == "dicke":
             scale = 7.936e-8  # see paper and mathematica
             return (scale*np.exp(0.5*m_cm*self.d_cm)*
                     self.T_K**(0.25)*
-                    (m_cm/(self.Bin_T*eta))**(0.5)*
+                    (m_cm/(self.Bin_volRMS_T*eta))**(0.5)*
                     (self.omega_cm/(self.tint_sec*self.Qrec**3))**(0.125))
 
     def left(self, m_cm):
@@ -118,27 +118,34 @@ def EvenExponentOnly(y, pos):
 if __name__ == "__main__":
     plt.rcParams['text.usetex'] = True
 
-    setup_current = {"Bin_T" : 0.05,
+    B_peaksurface_to_volumeRMS = {
+        "equal"  :1.295, # R=L=10cm
+        "pancake":2.043  # R=15cm, L=0.5cm
+        }  # ratio of peak wall B-field to volume-average RMS B-field
+           # see mathematica
+
+
+    setup_current = {"Bin_volRMS_T" : 0.1/B_peaksurface_to_volumeRMS["equal"],
                      "tint_sec" : 600.0,
-                     "T_K" : 3,
+                     "T_K" : 2,
                      "Qrec" : 1e9,
                      "snr" : 5,
                      "gap_cm": 0.05,
                      "eta_filename":"reachplot-TE011equal.in.out",
                      "readout":"dicke"}
 
-    setup_11p = {"Bin_T" : 0.2,
+    setup_11p = {"Bin_volRMS_T" : 0.1/B_peaksurface_to_volumeRMS["pancake"],
                 "tint_sec" : 3.1e7, # year
-                "T_K" : 0.1,
+                "T_K" : 0.01,
                 "Qrec" : 1e12,
                 "snr" : 5,
                 "gap_cm": 0.001,
                 "eta_filename":"reachplot-TE011pancake50_custom.out",
                 "readout":"phase-sensitive"}
 
-    setup_11e = {"Bin_T" : 0.2,
+    setup_11e = {"Bin_volRMS_T" : 0.1/B_peaksurface_to_volumeRMS["equal"],
                 "tint_sec" : 3.1e7, # year
-                "T_K" : 0.1,
+                "T_K" : 0.01,
                 "Qrec" : 1e12,
                 "snr" : 5,
                 "gap_cm": 0.05,
@@ -198,35 +205,35 @@ if __name__ == "__main__":
         ax.fill_between(limit[:,0], limit[:,1], epsilon_limits[1],
                         label=limit_filename[:-4], color=color, linewidth=0)
 
-    ax.text(2e-1, 1.8e-12, "XENON1T",
-              color='0.3', size=8, rotation=-27)
+    ax.text(2e-1, 5e-13, "XENON1T",
+              color='0.3', size=8, rotation=-22)
 
-    ax.text(1.7e-1, 3e-11, "Solar Cooling",
-              color='0.3', size=8, rotation=-27)
+    ax.text(1.6e-1, 6e-12, "Solar Cooling",
+              color='0.3', size=8, rotation=-21.5)
 
-    ax.text(2.5e-5, 5e-8, r"CMB",
+    ax.text(2.5e-5, 4.5e-8, r"CMB",
               color='0.8', size=8)
 
-    ax.text(6.25e-6, 5e-8, r"CROWS",
+    ax.text(6.25e-6, 4.5e-8, r"CROWS",
               color='0.3', size=7)
 
-    ax.text(1.2e-6, 5e-8, r"DarkSRF",
+    ax.text(1.2e-6, 4.5e-8, r"DarkSRF",
               color='0.8', size=8)
 
-    ax.text(1.2e-6, 2.8e-8, r"Pathfinder",
+    ax.text(1.2e-6, 2.2e-8, r"Pathfinder",
               color='0.8', size=8)
 
-    ax.text(1.1e-6, 1.8e-13, r"DarkSRF",
-              color='0.3', size=8, rotation=-27)
+    ax.text(1.1e-6, 6e-14, r"DarkSRF",
+              color='0.3', size=8, rotation=-20)
 
-    ax.text(2.5e-5, 1e-10, r"LSthinW {\rm I}",
+    ax.text(2.5e-5, 3e-11, r"{\rm LSthinW I}",
+              color="firebrick", size=10, rotation=13)
+
+    ax.text(5e-6, 6e-15, r"{\rm LSthinW II}",
               color="firebrick", size=10, rotation=17)
 
-    ax.text(5e-6, 2.5e-14, r"LSthinW {\rm II}",
-              color="firebrick", size=10, rotation=17)
-
-    ax.text(1e-3, 7e-14, r"LSthinW {\rm III}",
-              color="firebrick", size=10, rotation=17)
+    ax.text(1e-3, 2.6e-14, r"{\rm LSthinW III}",
+              color="firebrick", size=10, rotation=13)
 
 
     ax.set_xlabel(r"$\displaystyle m_{A'}\; [{\rm \tiny eV }]$", fontsize=14)
@@ -234,7 +241,7 @@ if __name__ == "__main__":
     # ax.text(3e-4, 1.3e-16, r"$\displaystyle m_{A'}$", size=18)
     # ax.text(1.15e-3, 1.65e-16, r"$\displaystyle [{ \rm eV}]$", size=10)
 
-    ax.text(2e-7, 8e-12, r"$\displaystyle \epsilon$", fontsize=20, rotation=0)
+    ax.text(1.5e-7, 8e-12, r"$\displaystyle \epsilon$", fontsize=20, rotation=0)
     ax.set_xlim(m_ev_limits)
     ax.set_ylim(epsilon_limits)
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(ExponentExceptOne))
@@ -245,7 +252,7 @@ if __name__ == "__main__":
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(EvenExponentOnly))
     ax.xaxis.set_tick_params(labelsize=12)
     ax.yaxis.set_tick_params(labelsize=12)
-    ax.set_aspect(0.5)
-    fig.savefig("reach.pdf", dpi=300)
+    ax.set_aspect(0.4)
+    fig.savefig("reach.pdf", dpi=300, bbox_inches="tight")
     # plt.show()
     plt.close(fig)

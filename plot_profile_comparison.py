@@ -29,51 +29,60 @@ def plot_profiles_v_mass(results, prefix=""):
     L = out[key0]["length"]
     sep = out[key0]["z_start"]
     omega = omegaTE011(R, L)[0]
-    colorset = ["indianred", "peru", "forestgreen", "deepskyblue"]
+    colorset = ["black", "indianred", "forestgreen", "deepskyblue"]
     ordered_masses = []
     colorindex=0
     fig, ax = plt.subplots()
     rs_fine = np.linspace(0, 1, 10**3)
     ax.plot(rs_fine, jhat_TE011(rs_fine, R, L),
-            linestyle='dotted', marker='', 
-            color='0.0', linewidth=2.5, 
-            label=r"analytic result ($\displaystyle m \gg \omega $)")
+            linestyle='dotted', marker='',
+            color='0.0', linewidth=3,
+            label=r"analytic result ($\displaystyle m_{{A'}} \gg \omega $)")
     for run in out:
         masses = out[run]["m"][:,0,0,0]
         rs = out[run]["r"][0,:,0,0]
         for m_index, m in enumerate(masses):
             ordered_masses.append(m)
-            jhat_profile = jhat(out[run]["re_jphi"][m_index, :, 0, 0], m, sep)
-            ax.plot(rs, jhat_profile,
-                    linestyle='-', linewidth=1.5, marker='',
-                    color=colorset[colorindex])
+            if colorindex != 0:
+                jhat_profile = jhat(out[run]["re_jphi"][m_index, :, 0, 0], m, sep)
+                ax.plot(rs, jhat_profile,
+                        linestyle='-', linewidth=1.5, marker='',
+                        color=colorset[colorindex])
             colorindex += 1
 
-    ax.text(0.2, 0.02, 
-            r"$\displaystyle m = {:0.1f} \, \omega$"
-            "".format(ordered_masses[0]/omega),
-            color=colorset[0], size=12)
+    # ax.text(0.2, 0.02,
+    #         r"$\displaystyle m = {:0.1f} \, \omega$"
+    #         "".format(ordered_masses[0]/omega),
+    #         color=colorset[0], size=16)
 
-    ax.text(0.09, 0.65, 
-            r"$\displaystyle m = \omega$"
+    ax.text(0.12, 0.65,
+            r"$\displaystyle m_{{A'}} = \omega$"
             "".format(ordered_masses[1]/omega),
-            rotation=60, color=colorset[1], size=12)
+            rotation=55, color=colorset[1], size=16)
 
-    ax.text(0.3, 0.715, 
-            r"$\displaystyle m = {:0.0f} \, \omega$"
+    ax.text(0.3, 0.66,
+            r"$\displaystyle m_{{A'}} = {:0.0f} \, \omega$"
             "".format(ordered_masses[2]/omega),
-            rotation=22.5, color=colorset[2], size=12)
+            rotation=10, color=colorset[2], size=16)
 
-    ax.text(0.8, 0.2, 
-            r"$\displaystyle m = {:0.0f} \, \omega$"
+    ax.text(0.70, 0.08,
+            r"$\displaystyle m_{{A'}} = {:0.0f} \, \omega$"
             "".format(ordered_masses[3]/omega),
-            rotation=-40, color=colorset[3], size=12)
-    
-    ax.legend(frameon=False, handletextpad=0.5)
-    ax.set_xlabel(r"$ \displaystyle \rho/R $", fontsize=12)
-    ax.set_ylabel(r"$ \displaystyle \hat{\, j_\phi} (\rho) $", 
-                  fontsize=12, rotation=0, labelpad=15)
-    fig.savefig("profile-comparison.pdf", dpi=300)
+            rotation=-39, color=colorset[3], size=16)
+
+    ax.set_ylim([-0.05, 1.6])
+    ax.legend(frameon=False, handletextpad=0.5, fontsize=14, loc="upper left")
+    ax.set_xlabel(r"$ \displaystyle \rho/R $", fontsize=16)
+    ax.text(-0.2, 0.72, r"$ \displaystyle \hat{\, j_\phi} (\rho) $",
+            fontsize=16, rotation=0)
+    ax.set_yticks([0, 0.5, 1, 1.5])
+
+    # ax.set_ylabel(r"$ \displaystyle \hat{\, j_\phi} (\rho) $",
+    #               fontsize=16, rotation=0, labelpad=10)
+    ax.xaxis.set_tick_params(labelsize=16)
+    ax.yaxis.set_tick_params(labelsize=16)
+
+    fig.savefig("profile-comparison.pdf", dpi=300, bbox_inches="tight")
     plt.close(fig)
 
 

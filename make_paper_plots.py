@@ -16,7 +16,7 @@ def make_mode_slice_plots(output_files, prefix=""):
     plot slices of effective current for two modes,
     to be used for comparison in paper
     """
-    out = ec.read_effective_current_output(output_files, prefix)
+    out = ec.read_OLD_effective_current_output(output_files, prefix)
     fig, [left, right] = plt.subplots(1,2)
 
     # color plot of |j_eff| for TM010
@@ -30,7 +30,7 @@ def make_mode_slice_plots(output_files, prefix=""):
     divider = make_axes_locatable(left)
     # cax = divider.append_axes("right", size="5%", pad=0.05)
     # fig.colorbar(cplot, cax=cax)
-    left.set_title("TM010 Source")
+    left.set_title(r"$ \displaystyle {\rm TM}_{010}$ {\rm Source}")
 
     # j_eff stream lines for TM010
     lw = 0.9
@@ -122,7 +122,7 @@ def make_mode_slice_plots(output_files, prefix=""):
     # divider = make_axes_locatable(right)
     # cax = divider.append_axes("right", size="5%", pad=0.05)
     # fig.colorbar(cplot)
-    right.set_title("TE011 Source")
+    right.set_title(r"$ \displaystyle {\rm TE}_{011}$ {\rm Source}")
     right.set_yticks([])
     right.set_yticks([])
     right.set_xlabel(r'$z/R$', size=12)
@@ -131,7 +131,7 @@ def make_mode_slice_plots(output_files, prefix=""):
         linestyle='-', color='black',
         linewidth=2)
 
-    fig.savefig("j_eff-slice.png", dpi=160)
+    fig.savefig("j_eff-slice.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
 
 
