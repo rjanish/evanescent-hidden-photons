@@ -128,7 +128,7 @@ if __name__ == "__main__":
     setup_current = {"Bin_volRMS_T" : 0.1/B_peaksurface_to_volumeRMS["equal"],
                      "tint_sec" : 600.0,
                      "T_K" : 2,
-                     "Qrec" : 1e9,
+                     "Qrec" : 1e10,
                      "snr" : 5,
                      "gap_cm": 0.05,
                      "eta_filename":"reachplot-TE011equal.in.out",
@@ -226,7 +226,7 @@ if __name__ == "__main__":
     ax.text(1.1e-6, 6e-14, r"DarkSRF",
               color='0.3', size=8, rotation=-20)
 
-    ax.text(2.5e-5, 3e-11, r"{\rm LSthinW I}",
+    ax.text(2.5e-5, 1.2e-11, r"{\rm LSthinW I}",
               color="firebrick", size=10, rotation=13)
 
     ax.text(5e-6, 6e-15, r"{\rm LSthinW II}",
