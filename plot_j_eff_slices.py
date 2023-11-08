@@ -71,9 +71,9 @@ def make_mode_slice_plots(output_files, prefix=""):
                   arrowstyle="->", start_points=Efield_lines,
                   color=Ez_TM010(z_left_inside, r_left_inside))
     left.text(-0.35, 0.17, r'$\displaystyle \vec{E}_\textrm{em} $',
-            color=cm.Blues(0.8), fontsize=16)
+            color=cm.Blues(0.8), fontsize=18)
     left.text(-0.18, 1.25, r'$\displaystyle \vec{j}_\textrm{eff} $',
-            color='maroon', fontsize=16)
+            color='maroon', fontsize=18)
 
     # cavity boundary
     left.plot([-0.5, 0, 0], [1, 1, 0], marker='',
@@ -81,18 +81,18 @@ def make_mode_slice_plots(output_files, prefix=""):
         linewidth=2)
     # labels
     left.set_title(r"$ \displaystyle {\rm TM}_{010}$ {\rm Emitter}",
-                   fontsize=14)
-    left.set_xlabel(r'$ \displaystyle z/R$', size=15, labelpad=5)
+                   fontsize=16)
+    left.set_xlabel(r'$ \displaystyle z/R$', size=16, labelpad=5)
     # left.set_ylabel(r'$ \displaystyle \frac{\rho}{R}$', size=14, rotation=0)
-    left.text(-0.75, 0.725, r'$ \displaystyle \frac{\rho}{R}$', size=15, rotation=0)
+    left.text(-0.8, 0.725, r'$ \displaystyle \frac{\rho}{R}$', size=16, rotation=0)
     left.set_ylim([0, 1.5])
     left.set_yticks(0.25*np.arange(7))
     left.set_xlim([-0.5, 0.5])
     left.set_xticks(-0.4 + 0.2*np.arange(5))
     left.xaxis.set_minor_locator(tick.MultipleLocator(0.1))
     left.yaxis.set_minor_locator(tick.MultipleLocator(0.05))
-    left.xaxis.set_tick_params(labelsize=13)
-    left.yaxis.set_tick_params(labelsize=13)
+    left.xaxis.set_tick_params(labelsize=16)
+    left.yaxis.set_tick_params(labelsize=16)
 
 
     # color plot of j_eff_phi for TE011
@@ -134,20 +134,20 @@ def make_mode_slice_plots(output_files, prefix=""):
             right.add_patch(plt.Circle((xp, yp), 0.035, color="maroon",
                                     fill=False, linewidth=lw))
     right.text(-0.35, 0.17, r'$\displaystyle \vec{E}_\textrm{em} $',
-            color=cm.Blues(0.8), size=16)
+            color=cm.Blues(0.8), size=18)
     right.text(-0.18, 1.25, r'$\displaystyle \vec{j}_\textrm{eff} $',
-            color='maroon', size=16)
+            color='maroon', size=18)
     right.set_aspect("equal")
 
     right.set_title(r"$ \displaystyle {\rm TE}_{011}$ {\rm Emitter}",
-                    fontsize=14)
+                    fontsize=16)
     right.set_ylim([0, 1.5])
     right.set_yticks([])
     right.set_xlim([-0.5, 0.5])
     right.set_xticks(-0.4 + 0.2*np.arange(5))
     right.xaxis.set_minor_locator(tick.MultipleLocator(0.1))
-    right.xaxis.set_tick_params(labelsize=13)
-    right.set_xlabel(r'$z/R$', size=15)
+    right.xaxis.set_tick_params(labelsize=16)
+    right.set_xlabel(r'$z/R$', size=16)
     # cavity boundary
     right.plot([-0.5, 0, 0], [1, 1, 0], marker='',
         linestyle='-', color='black',
@@ -155,7 +155,7 @@ def make_mode_slice_plots(output_files, prefix=""):
     # save
     fig.tight_layout()
     plt.subplots_adjust(wspace=0.03, hspace=None)
-    fig.savefig("j_eff-slice.png", dpi=300, bbox_inches="tight")
+    fig.savefig("j_eff-slice.png", bbox_inches="tight")
 
 
 if __name__ == "__main__":

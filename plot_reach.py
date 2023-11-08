@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
 
     setup_current = {"Bin_volRMS_T" : 0.1/B_peaksurface_to_volumeRMS["equal"],
-                     "tint_sec" : 600.0,
+                     "tint_sec" : 4*3600.0, # 1 hours
                      "T_K" : 2,
                      "Qrec" : 1e10,
                      "snr" : 5,
@@ -136,7 +136,7 @@ if __name__ == "__main__":
 
     setup_11p = {"Bin_volRMS_T" : 0.1/B_peaksurface_to_volumeRMS["pancake"],
                 "tint_sec" : 3.1e7, # year
-                "T_K" : 0.01,
+                "T_K" : 2,
                 "Qrec" : 1e12,
                 "snr" : 5,
                 "gap_cm": 0.001,
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     setup_11e = {"Bin_volRMS_T" : 0.1/B_peaksurface_to_volumeRMS["equal"],
                 "tint_sec" : 3.1e7, # year
-                "T_K" : 0.01,
+                "T_K" : 2,
                 "Qrec" : 1e12,
                 "snr" : 5,
                 "gap_cm": 0.05,
@@ -208,14 +208,16 @@ if __name__ == "__main__":
     ax.text(2e-1, 5e-13, "XENON1T",
               color='0.3', size=8, rotation=-22)
 
-    ax.text(1.6e-1, 6e-12, "Solar Cooling",
-              color='0.3', size=8, rotation=-21.5)
+    # ax.text(1.6e-1, 6e-12, "Solar Cooling",
+    #           color='0.3', size=8, rotation=-21.5)
+    ax.text(1.25e-4, 4e-9, "Solar Energy Loss",
+              color='0.35', size=8, rotation=-21.5)
 
     ax.text(2.5e-5, 4.5e-8, r"CMB",
               color='0.8', size=8)
 
     ax.text(6.25e-6, 4.5e-8, r"CROWS",
-              color='0.3', size=7)
+              color='0.35', size=7)
 
     ax.text(1.2e-6, 4.5e-8, r"DarkSRF",
               color='0.8', size=8)
@@ -226,13 +228,13 @@ if __name__ == "__main__":
     ax.text(1.1e-6, 6e-14, r"DarkSRF",
               color='0.3', size=8, rotation=-20)
 
-    ax.text(2.5e-5, 1.2e-11, r"{\rm LSthinW I}",
+    ax.text(2.5e-5, 9e-12, r"{\rm LSthinW I}",
               color="firebrick", size=10, rotation=13)
 
-    ax.text(5e-6, 6e-15, r"{\rm LSthinW II}",
+    ax.text(6e-6, 2.2e-14, r"{\rm LSthinW II}",
               color="firebrick", size=10, rotation=17)
 
-    ax.text(1e-3, 2.6e-14, r"{\rm LSthinW III}",
+    ax.text(1e-3, 1e-13, r"{\rm LSthinW III}",
               color="firebrick", size=10, rotation=13)
 
 
